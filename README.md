@@ -597,15 +597,15 @@ Aşağıda bir "Kullanıcı" nesnesinin JSON formatında nasıl modellendiğini 
     <yetenekler>
         <yetenek>Java</yetenek>
         <yetenek>Git</yetenek>
-    </yetenekler>
+        </yetenekler>
 </kullanici>
  ```
-
-
-<details>
-<details>
+</details>
 
 ## 10. Protocol Buffers (Protobuf) ve gRPC
+
+
+<details>
 
   <summary>Protocol Buffers (Protobuf) Nedir?</summary>
   
