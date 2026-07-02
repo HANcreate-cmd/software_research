@@ -505,6 +505,43 @@ Kanban → İş akışı panosu (To Do → Doing → Done).
 
 </details>
 
+## 7. HTTP Protokolü ve İletişim Standartları
+
+<details>
+  <summary>HTTP Protokolü Nedir?</summary>
+  
+* **HTTP Protokolü:** İstemci (Client) ve Sunucu (Server) arasında veri alışverişinin nasıl yapılacağını belirleyen, internetin temel iletişim standartları ve kuralları bütünüdür.
+
+</details>
+
+<details>
+  <summary>HTTP Metotları</summary>
+  
+* **GET:** Sunucudan sadece veri okumak veya bilgi getirmek için kullanılır.
+* **POST:** Sunucuya yeni bir veri göndermek ve veritabanında yeni bir kayıt oluşturmak için kullanılır.
+* **PUT:** Sunucudaki mevcut bir kaydı *tamamen* değiştirmek (üzerine yazmak) için kullanılır.
+* **PATCH:** Sunucudaki mevcut bir kaydın sadece *belirli bir parçasını* (örn: sadece şifreyi) güncellemek için kullanılır.
+* **DELETE:** Sunucudaki belirli bir veriyi silmek için kullanılır.
+
+</details>
+
+<details>
+  <summary>HTTP Status (Durum) Kodları</summary>
+  
+**2xx - Başarı Durumları**
+* **200 OK:** İstek kusursuz bir şekilde işlendi ve beklenen yanıt geri döndürüldü.
+* **201 Created:** İstek başarıyla işlendi ve bunun sonucunda sunucuda yeni bir kaynak (kayıt) başarıyla oluşturuldu.
+
+**4xx - İstemci (Client) Hataları**
+* **400 Bad Request:** İstek hatalı, eksik veya sunucunun anlayamayacağı bir formatta gönderildi.
+* **401 Unauthorized:** Bu işlemi yapabilmek için sisteme giriş yapmış olman (kimliğini doğrulaman) gerekiyor.
+* **403 Forbidden:** Sisteme giriş yapmış olabilirsin ancak bu işlemi yapmaya yetkin (iznin) yok.
+* **404 Not Found:** İstediğin sayfa, dosya veya veri sunucuda bulunamadı.
+
+**5xx - Sunucu (Server) Hataları**
+* **500 Internal Server Error:** İstemcinin isteği doğru olsa da sunucu tarafında (Backend) beklenmeyen bir çökme veya kod hatası meydana geldi.
+
+</details>
 
 
 
