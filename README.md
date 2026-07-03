@@ -806,3 +806,108 @@ Docker ekosisteminde bir uygulamanın ayağa kalkma sürecini oluşturan 3 temel
 * **Kolay Deployment (Hızlı Canlıya Alma):** Sunucu üzerinde dakikalarca veya saatlerce süren altyapı kurulumu (Java versiyonu eşleme, veritabanı indirme, port yönlendirme) ihtiyacını ortadan kaldırır. Hazırlanan Docker imajı sunucuya tek bir komutla çekilir ve saniyeler içinde uygulama yayına (canlıya) alınır.
 
 </details>
+
+## 13. API Teknolojileri
+
+<details>
+  <summary>REST API Prensipleri</summary>
+  
+REST, farklı sistemlerin (Frontend, Backend, Mobil) internet üzerinden birbiriyle konuşurken uyması gereken evrensel mimari kurallardır.
+
+* **Stateless (Durumsuzluk):** Sunucu, gelen isteklerin geçmişini aklında tutmaz (balık hafızalıdır). Bu nedenle her bir istek (request), sunucunun o işlemi gerçekleştirebilmesi için ihtiyaç duyduğu **tüm bilgileri** (kimlik doğrulama token'ı, parametreler vb.) kendi içinde barındırmak zorundadır.
+* **Resource Based (Kaynak Odaklılık):** API tasarlanırken eylemlere (fiillere) değil, verilere (isimlere) odaklanılır. Adresler `.../kullanici-getir` veya `.../araba-sil` şeklinde fiillerden oluşamaz. Bunun yerine odak noktamız olan kaynak (isim) çoğul olarak yazılır: `.../users` veya `.../cars`. İşlemin ne olacağını adres değil, HTTP metotları (GET, POST vb.) belirler.
+
+</details>
+
+<details>
+  <summary>HTTP Methods ve Endpoint Tasarımı Örnekleri</summary>
+
+RESTful mimaride Endpoint (URL Adresi) sabit kalır, o adrese atılan isteğin "Türü" (HTTP Metodu) yapılarak işlemi değiştirir:
+
+* **`GET /api/users`**
+  * **İşlevi:** Sistemdeki tüm kullanıcıların listesini getirir. Veritabanında sadece okuma işlemi yapar.
+* **`POST /api/users`**
+  * **İşlevi:** Sisteme yepyeni bir kullanıcı ekler. İsteğin gövdesinde (Body) yeni kullanıcının JSON formatındaki bilgileri yer alır.
+* **`GET /api/users/1`**
+  * **İşlevi:** URL'nin sonuna eklenen parametre sayesinde sadece ID numarası "1" olan o spesifik kullanıcının detaylarını getirir.
+* **`PUT /api/users/1`**
+  * **İşlevi:** ID numarası 1 olan kullanıcının bilgilerini (Örn: Adresini veya şifresini) tamamen günceller.
+* **`DELETE /api/users/1`**
+  * **İşlevi:** ID numarası 1 olan kullanıcıyı sistemden siler.
+
+</details>
+
+<details>
+  <summary>GraphQL Nedir?</summary>
+  
+* **Tanım:** Facebook tarafından geliştirilen, REST API'ye güçlü bir alternatif olan veri sorgulama dilidir. 
+* **Temel Farkı:** REST mimarisinde sunucunun belirlediği standart paketler (veriler) istemciye gönderilirken; GraphQL'de **kontrol istemcidedir (Frontend)**. İstemci, sunucuya bir "istek listesi" gönderir ve sunucu sadece bu listedeki alanları döndürür.
+
+</details>
+
+<details>
+  <summary>GraphQL'in Avantajları</summary>
+  
+* **İhtiyaç Kadar Veri Çekebilme (No Overfetching / Underfetching):** REST API'de sadece bir kullanıcının ismine ihtiyacınız olsa bile `/users/1` isteği size o kullanıcının tüm şifre, adres ve geçmiş bilgilerini gereksiz yere indirebilir (Overfetching). GraphQL'de ise sadece `"isim"` alanını istersiniz ve sadece o alan gelir. İnternet bant genişliğinden inanılmaz tasarruf sağlar.
+* **Tek Endpoint (Single Endpoint):** REST API'de her kaynak için ayrı bir URL adresi (`/users`, `/orders`, `/products`) bulunurken, GraphQL'de sistem ne kadar büyük olursa olsun dışarıya açılan sadece **tek bir kapı** (`/graphql`) vardır. Frontend geliştiricisi elindeki listeyi bu kapıya verir, sistem arka planda gerekli veritabanlarından bilgileri toplayıp tek seferde geri döndürür.
+
+</details>
+
+<details>
+  <summary>GraphQL'in Dezavantajları</summary>
+  
+* **Cache (Önbellekleme) Yönetiminin Karmaşıklığı:** REST mimarisinde HTTP önbellekleme sistemleri URL tabanlı çalışır (Örn: `/users/1` adresi her zaman aynı veriyi döndürdüğü için kolayca hafızaya alınır). Ancak GraphQL'de tüm istekler aynı adrese (`/graphql`) yapıldığı ve her isteğin içeriği (istenen veri kombinasyonu) farklı olduğu için, sonuçları hafızada tutmak (caching) ve yönetmek çok daha zor ve karmaşık bir mühendislik gerektirir.
+
+</details>
+
+
+<details>
+  <summary>SOAP Nedir ve Mantığı Nasıldır?</summary>
+  
+* **Tanım:** İnternet üzerindeki uygulamaların birbiriyle iletişim kurmasını sağlayan, kuralları son derece katı, yüksek güvenlikli ve eski ama çok sağlam bir protokoldür.
+* **Mantığı:** REST mimarisinin esnekliğinin tam zıttıdır. REST günlük hayattaki rahat bir sohbet ise, SOAP resmi bir devlet dairesine verilen ıslak imzalı bir dilekçe gibidir. Her şeyin kuralı, formatı ve güvenlik duvarları önceden kesin bir şekilde belirlenmiştir. Esnekliğe yer yoktur.
+
+</details>
+
+<details>
+  <summary>Temel Özellikleri ve Kavramlar</summary>
+  
+* **XML Tabanlı (Sıkı Format):** REST genellikle hafif olan JSON'u tercih ederken, SOAP sadece XML kullanır. Veriler; Envelope (Zarf), Header (Başlık) ve Body (Gövde) adı verilen standart etiketlerin içine hapsedilerek gönderilir. En ufak bir format hatasında (eksik etiket vb.) işlem tamamen reddedilir.
+* **WSDL (Web Services Description Language):** SOAP servisinin dış dünyaya sunduğu, makine tarafından okunabilen "Kullanım Kılavuzu" veya "Sözleşmesi"dir. Servisin hangi işlemleri yapabildiği, parametrelerin veri tipleri (Örn: yaş bilgisinin sadece rakam olabileceği) bu belgede kesin olarak yazar. İstemci (Client) bu WSDL dosyasını okumadan sisteme istek atamaz.
+
+</details>
+
+<details>
+  <summary>Neden Kurumsal Sistemlerde Kullanılır?</summary>
+  
+* **Kullanım Alanları:** Bankacılık sistemleri, E-Devlet uygulamaları, telekomünikasyon ve büyük finansal entegrasyonlar.
+* **Neden REST Değil de SOAP?:** SOAP, veri transferinde ekstra karakterler (XML) kullandığı için REST'e göre hantal ve yavaştır. Ancak WS-Security gibi gömülü güvenlik standartlarına ve işlemlerin yarıda kalmasını önleyen çok katı ACID uyumluluğuna sahiptir. Milyon dolarlık EFT işlemlerinde veya resmi devlet evraklarında "hız veya esneklik" değil; "kusursuz güvenlik ve değişmez kurallar" istendiği için devasa kurumların vazgeçilmezidir.
+
+</details>
+
+<details>
+  <summary>Büyüklük Karşılaştırma: REST vs GraphQL vs SOAP</summary>
+
+API mimarisi seçerken projenin ihtiyaçlarına göre bu üç teknolojiden biri tercih edilir. Aralarındaki temel farklar şu şekildedir:
+
+| Özellik | REST API | GraphQL | SOAP |
+| :--- | :--- | :--- | :--- |
+| **Yapı Türü** | Mimari Tarz (Esnek) | Sorgu Dili / Spesifikasyon | Katı Protokol (Standartlar) |
+| **Veri Formatı** | JSON, XML, HTML, Metin | Sadece JSON | Sadece XML |
+| **Endpoint (Adres)** | Çoklu (Örn: `/users`, `/cars`) | Tek bir kapı (Örn: `/graphql`) | Tek bir kapı (WSDL odaklı) |
+| **Veri Kontrolü** | Sunucu belirler (Backend) | İstemci belirler (Frontend) | Sunucu belirler (Katı kurallar) |
+| **Hız / Boyut** | Orta (Gereksiz veri gelebilir) | Çok Hızlı (Sadece istenen veri) | Yavaş ve Hantal (Ağır XML yükü) |
+| **Güvenlik** | SSL/TLS, Token tabanlı | SSL/TLS, Esnek güvenlik | WS-Security (En yüksek/katı) |
+
+### Özet Analojilerle Farklar:
+
+* **REST:** Bir restoranda standart menü sipariş etmek gibidir. 3 numaralı menüyü istersiniz; içindeki kolayı sevmeseniz bile o kola masanıza mecbur gelir (Overfetching).
+* **GraphQL:** Garsona özel sipariş vermektir. *"Bana sadece burgerin köftesini ve marulunu getir, patates ve içecek istemiyorum"* dersiniz. Tam ihtiyacınız olan bayt kadar veri gelir, internet kotasını yormaz.
+* **SOAP:** Bankalar arası para taşıyan zırhlı nakliye aracı gibidir. Çok hantaldır, yavaş ilerler, şifreli kilitleri ve katı prosedürleri vardır; ancak içindeki değerli varlığı (veriyi) %100 güvenlik ve sıfır hata payı ile taşır.
+
+### Hangisini Ne Zaman Seçmeli?
+1.  **REST:** Standart web projeleri, mobil uygulamalar, herkesin hızlıca entegre olabileceği genel (public) API'ler geliştirilirken sektör standardıdır.
+2.  **GraphQL:** Frontend tarafının çok karmaşık olduğu, ekranın farklı yerlerinde sürekli farklı veri kombinasyonlarına ihtiyaç duyulduğu (Örn: Kripto borsası arayüzleri veya sosyal medya akışları) ve bant genişliğinin kritik olduğu durumlaboratuvar ortamlarında tercih edilir.
+3.  **SOAP:** Bankacılık sistemleri, e-devlet entegrasyonları ve iki büyük kurumun birbiriyle hatasız, resmi sözleşmelere (WSDL) bağlı olarak veri transferi yapması gereken durumlarda zorunluluktur.
+
+</details>
