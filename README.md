@@ -752,3 +752,57 @@ Projelerde veritabanı ile yazılım kodu arasındaki köprüyü inşa etmeye ha
 * **Database First (Veritabanından Model Üretme):** Genellikle halihazırda var olan eski/büyük projelere dahil olunduğunda kullanılır. Veritabanı zaten mevcuttur. EF Core (Scaffolding yöntemiyle) mevcut veritabanına bağlanır, tabloları inceler ve geliştiricinin kullanması için gerekli C# sınıflarını otomatik olarak üretir. *(Örn: Halihazırda var olan eski bir binanın içine girip, ölçümler yaparak o fiziksel binanın mimari krokisini kağıda dökmektir. Kontrol veritabanındadır.)*
 
 </details>
+
+## 12. Docker ve Containerization
+
+<details>
+  <summary>Docker Nedir?</summary>
+  
+* **Tanım:** Uygulamaları ve onların çalışması için gereken tüm bağımlılıkları (kütüphaneler, ortam değişkenleri) tek bir standart paket olan **"Konteyner" (Container)** içine hapseden platformdur.
+* **Çözdüğü Sorun:** Geliştiricilerin korkulu rüyası olan "Benim bilgisayarımda çalışıyordu, sunucuda neden hata veriyor?" sorununu çözer. Docker konteyneri içine hapsedilen bir uygulama, Linux, Windows veya Bulut ortamı fark etmeksizin her yerde kusursuz ve aynı şekilde çalışır. (Tıpkı içindeki yük ne olursa olsun dünyadaki her gemiye, tıra ve vince tam uyum sağlayan standart çelik nakliye konteynerleri gibi).
+
+</details>
+
+<details>
+  <summary>Kubernetes (K8s) Nedir?</summary>
+
+* **Tanım:** Google tarafından geliştirilen, binlerce Docker konteynerinin otomatik olarak dağıtılmasını, ölçeklendirilmesini ve yönetilmesini sağlayan **"Konteyner Orkestrasyon"** aracıdır.
+* **Ne İşe Yarar?:** Tek bir konteyneri elde yönetmek kolaydır ancak devasa bir sistemde binlerce konteyneri yönetmek imkansızdır. Kubernetes, bu sistemin "Vinç Operatörü"dür. Bir konteyner çöktüğünde anında yerine yenisini açar (Self-healing), trafiğin arttığı kampanya günlerinde kopyalar oluşturarak sistemi büyütür (Auto-scaling) ve trafik düştüğünde sistemi küçülterek maliyetleri düşürür.
+
+</details>
+
+<details>
+  <summary>Docker vs Kubernetes Farkı</summary>
+
+* Sanılanın aksine bu iki teknoloji birbirine **rakip değildir**, birbirini tamamlayan teknolojilerdir.
+* **Docker**, uygulamayı çalıştırılabilir, izole bir kutuya (konteynere) koyma işlemidir.
+* **Kubernetes** ise o kutulardan binlercesini aynı anda yöneten, organize eden ve trafik akışını sağlayan liman yönetim sistemidir.
+* Küçük projelerde Kubernetes olmadan sadece Docker kullanılabilir, ancak devasa mikro servis projelerinde Docker konteynerlerini yönetmek için Kubernetes şarttır.
+
+</details>
+<details>
+  <summary>Docker Bileşenleri: Dockerfile, Image ve Container</summary>
+  
+Docker ekosisteminde bir uygulamanın ayağa kalkma sürecini oluşturan 3 temel yapı taşı vardır:
+
+* **Dockerfile (Montaj Kılavuzu):** Uygulamanın nasıl paketleneceğini, içine hangi kütüphanelerin (Örn: Java 17, Ubuntu) kurulacağını adım adım belirten düz bir metin dosyasıdır.
+* **Docker Image (Dondurulmuş Kalıp / Kurulum Dosyası):** Dockerfile talimatları doğrultusunda derlenen, uygulamanın çalışmaya hazır ancak kendi başına değiştirilemez (read-only) olan paketlenmiş halidir. Bir oyunun internetten indirilen setup (ISO) dosyası gibidir.
+* **Docker Container (Canlı Çalışan Örnek):** İmaj kalıbının sunucuda veya bilgisayarda canlandırılmış, aktif olarak RAM üzerinde **çalışan halidir**. Tek bir imaj kalıbından (Setup dosyasından) yan yana binlerce bağımsız çalışan container (canlı uygulama) üretilebilir.
+
+</details>
+
+<details>
+  <summary>Docker Compose Nedir?</summary>
+
+* **Tanım:** Birden fazla Docker konteynerine sahip karmaşık uygulamaları (Örn: Aynı anda çalışması gereken bir Backend, bir Frontend ve bir SQL Veritabanı) tek bir merkezden tanımlayıp yönetmeyi sağlayan araçtır.
+* **Mantığı:** Tüm bu servislerin ayarları ve birbirleriyle nasıl konuşacakları `docker-compose.yml` adlı tek bir dosyada yazılır. Geliştirici her konteyneri tek tek elle başlatmak yerine `docker-compose up` komutunu yazarak tüm sistemi tek bir hamlede kusursuz bir uyumla ayağa kaldırır.
+
+</details>
+
+<details>
+  <summary>Docker'ın Sağladığı Temel Avantajlar</summary>
+
+* **Ortam Bağımsızlığı (Environment Independence):** Uygulamanın çalışacağı işletim sistemi, sürüm farklılıkları veya bağımlılık sorunları tamamen tarih olur. Uygulama geliştiricinin yerel bilgisayarında nasıl çalışıyorsa; test ortamında veya canlı sunucuda (production) da birebir aynı kararlılıkla çalışır.
+* **Kolay Deployment (Hızlı Canlıya Alma):** Sunucu üzerinde dakikalarca veya saatlerce süren altyapı kurulumu (Java versiyonu eşleme, veritabanı indirme, port yönlendirme) ihtiyacını ortadan kaldırır. Hazırlanan Docker imajı sunucuya tek bir komutla çekilir ve saniyeler içinde uygulama yayına (canlıya) alınır.
+
+</details>
