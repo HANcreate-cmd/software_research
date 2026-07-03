@@ -911,3 +911,37 @@ API mimarisi seçerken projenin ihtiyaçlarına göre bu üç teknolojiden biri 
 3.  **SOAP:** Bankacılık sistemleri, e-devlet entegrasyonları ve iki büyük kurumun birbiriyle hatasız, resmi sözleşmelere (WSDL) bağlı olarak veri transferi yapması gereken durumlarda zorunluluktur.
 
 </details>
+<details>
+  <summary>WebSocket Nedir ve Mantığı Nasıldır?</summary>
+  
+* **Tanım:** İstemci (Client) ve Sunucu (Server) arasında, tek bir bağlantı üzerinden **çift yönlü (bidirectional)** ve **kesintisiz/eşzamanlı (real-time)** veri aktarımı sağlayan iletişim protokolüdür.
+* **REST'ten Farkı:** REST API'de iletişim "Soru-Cevap" şeklindedir. İstemci istek atar, sunucu cevap verir ve kapıyı kapatır. Sunucu durup dururken istemciye veri yollayamaz. WebSocket'te ise iletişim bir "Telefon Görüşmesi" gibidir. Hat bir kez açılır ve bağlantı koparılana kadar açık kalır. İki taraf da birbirine sormadan, istediği an veri gönderebilir.
+</details>
+
+<details>
+  <summary>WebSocket Kullanım Alanları (Gerçek Hayat Örnekleri)</summary>
+  
+REST mimarisinin yetersiz kaldığı, saniyelik güncellemelerin hayati olduğu sistemlerde kullanılır:
+
+* **Canlı Borsa ve Kripto Grafikleri:** Binance gibi platformlarda AVAX veya BTC fiyatlarını izlerken sayfayı yenilemenize gerek kalmaz. Fiyatta bir oynama olduğu an sunucu, WebSocket tüneli üzerinden bu veriyi doğrudan ekranınıza iter (push) ve grafikler anında güncellenir.
+* **Rekabetçi Çok Oyunculu Oyunlar (Multiplayer):** Rocket League gibi hızın kritik olduğu oyunlarda, topun ve rakip araçların milisaniyelik koordinat değişiklikleri, açık soket bağlantıları üzerinden kesintisiz bir veri akışıyla oyuncuya iletilir. Gecikmesiz (lag-free) oyun deneyiminin temelidir.
+* **Canlı Sohbet Uygulamaları:** WhatsApp Web veya Twitch Chat gibi platformlarda, siz bir yere tıklamadan karşıdan gelen mesajın anında ekranınıza düşmesini sağlayan teknoloji yine WebSocket'tir.
+</details>
+
+<details>
+  <summary>OpenAPI ve Swagger Nedir?</summary>
+  
+* **OpenAPI:** REST API'lerin hangi endpoint'lere (adreslere) sahip olduğunu, hangi verileri (JSON) kabul edip ne döndüreceğini tanımlayan evrensel bir spesifikasyon (standartlar bütünü) dilidir.
+* **Swagger (Swagger UI):** OpenAPI standartlarıyla yazılmış API dokümanlarını alıp, tarayıcı üzerinde çalışan, görsel, renkli ve interaktif bir web sayfasına çeviren araçtır.
+* **Mantığı:** WSDL'in modern, okunabilir ve test edilebilir versiyonudur. Geliştiriciler kodlarına ekledikleri ufak notasyonlar sayesinde, API'lerinin "Canlı Kullanım Kılavuzunu" otomatik olarak oluştururlar. Swagger arayüzü üzerinden "Execute" butonuna basılarak harici bir araca (Örn: Postman) ihtiyaç duymadan API doğrudan tarayıcı üzerinden test edilebilir.
+
+</details>
+
+<details>
+  <summary>Client Generation (Otomatik Kod Üretimi) Nedir?</summary>
+  
+* **Tanım:** OpenAPI/Swagger dosyasındaki standart API haritasını kullanarak, Frontend (İstemci) tarafında backend ile iletişim kuracak kodların makine tarafından otomatik olarak yazılması işlemidir.
+* **Ne İşe Yarar (Avantajları):** Büyük bir platformun (Örn: Binance) API'sine bağlanmak için HTTP istekleri, Header ayarları ve JSON ayrıştırma (parsing) kodlarını elde yazmak haftalar sürebilir ve hataya açıktır. Client Generation araçları, API şemasını okur ve saniyeler içinde projenize özel hazır metotlar (Örn: `apiClient.getUsers()`) üretir.
+* **Özetle:** Backend ile Frontend arasındaki iletişimi sağlayan "Kabloyu ve Adaptörü" geliştiricinin yerine otomatik olarak üreten fabrika gibidir. Büyük bir zaman ve iş gücü tasarrufu sağlar.
+
+</details>
