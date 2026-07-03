@@ -623,3 +623,132 @@ Aşağıda bir "Kullanıcı" nesnesinin JSON formatında nasıl modellendiğini 
 * **Nasıl Çalışır?:** Bir mikro servis, başka bir sunucudaki mikro servisin içindeki bir metodu (fonksiyonu) sanki kendi bilgisayarındaymış gibi doğrudan çağırabilir (Remote Procedure Call). Yüksek hızlı ve düşük gecikmeli backend-to-backend (sunucudan sunucuya) iletişimde sektör standardıdır.
 
 </details>
+
+## 11. Veritabanı Temelleri
+
+<details>
+  <summary>Relational Databases (İlişkisel Veritabanları / SQL)</summary>
+  
+* **Mantığı:** Verileri kusursuz bir düzen içinde, tıpkı Excel tabloları gibi **satırlar (row)** ve **sütunlar (column)** halinde tutar. En büyük özelliği, tabloların birbirine sıkı kurallarla (Örn: ID numaraları üzerinden) bağlı (ilişkili) olmasıdır. Finans, bankacılık ve e-ticaret gibi verinin hata kaldırmadığı sistemlerde kullanılır.
+
+**Popüler SQL Veritabanları:**
+* **SQL Server (MSSQL):** Microsoft tarafından geliştirilmiş, çok güçlü, güvenli ancak lisans maliyetleri yüksek kurumsal bir veritabanıdır. (Örn: Otomobil dünyasındaki Mercedes gibidir; mühendisliği harikadır ama bakımı pahalıdır.)
+* **PostgreSQL:** Dünyanın en gelişmiş açık kaynaklı (ücretsiz) ilişkisel veritabanıdır. Karmaşık veri tipleriyle başa çıkma konusunda rakipsizdir. (Örn: Sanayideki elinden her iş gelen, doğru ayarlandığında paralı rakiplerini bile geçen o efsanevi ustadır.)
+* **MySQL:** Web dünyasının en eski ve yaygın kullanılan açık kaynaklı veritabanıdır. (Örn: Toyota Corolla gibidir; piyasada çok fazladır, parçası ve çözümü her yerde bulunur, asla yolda bırakmaz.)
+
+</details>
+
+<details>
+  <summary>NoSQL Databases (İlişkisel Olmayan Veritabanları)</summary>
+
+* **Mantığı:** Verileri katı tablolara ve sütunlara sıkıştırmak yerine, özgür ve esnek formatlarda (genellikle JSON yapısına benzer şekilde) tutan sistemlerdir. Sistemdeki bir verinin 5, diğerinin 50 özelliği olabilir; kurallar katı değildir.
+
+**Popüler NoSQL Veritabanları:**
+* **MongoDB:** Dünyanın en popüler NoSQL veritabanıdır. Verileri "Dokümanlar" (Document) halinde saklar. Şema (Schema) zorunluluğu yoktur, proje değiştikçe yeni veri tiplerini anında kabul eder. (Örn: İçine ne atarsan alan, sınırları olmayan devasa bir klasör gibidir; her müşterinin dosyası farklı boyutta olsa da veriyi anında bulur.)
+* **Redis:** Verileri yavaş olan Harddisk'e değil, doğrudan bilgisayarın uçuş hızındaki **RAM belleğine** yazan bir "Key-Value" (Anahtar-Değer) veritabanıdır. İnanılmaz hızlıdır ancak RAM geçici olduğu için ana veritabanı yerine genellikle "Cache" (Önbellek) olarak kullanılır. (Örn: Rekabetçi oyunlardaki anlık maç skoru veya saniyelik top pozisyonu gibi şimşek hızında okunması gereken geçici verilerin tutulduğu yerdir.)
+
+</details>
+
+<details>
+  <summary>Temel SQL Sorguları (CRUD İşlemleri)</summary>
+  
+Veritabanında yapılabilecek en temel 4 işleme **CRUD** (Create, Read, Update, Delete) denir. SQL dillerinde bunların karşılığı şöyledir:
+
+* **SELECT (Okuma):** Veritabanından veri çekmek (okumak) için kullanılır. Sistemi değiştirmez, sadece listeler. (Örn: Sadece kırmızı renkli BMW'leri listele).
+* **INSERT (Ekleme):** Tabloya yepyeni bir kayıt (satır) ekler. (Örn: Sisteme yeni bir kullanıcı kaydetmek).
+* **UPDATE (Güncelleme):** Var olan bir kaydın içindeki bilgileri değiştirir. (Örn: Aracın yakıt türünü Benzin'den LPG'ye çevirmek. Hangi aracı değiştireceğini filtrelemezsen tüm arabaları güncellersin!).
+* **DELETE (Silme):** Var olan bir kaydı tablodan tamamen siler.
+</details>
+
+<details>
+  <summary>İleri Seviye SQL Kavramları (Bölüm 1)</summary>
+  
+* **JOIN (Birleştirme):** İlişkisel veritabanlarının (SQL) kalbidir. Parçalanmış farklı tabloları ortak bir ID (kimlik) üzerinden birleştirip anlamlı bir bütün oluşturur. (Örn: Sadece isimlerin olduğu 'Kullanıcılar' tablosu ile sadece ürünlerin olduğu 'Siparişler' tablosunu birleştirip faturayı oluşturmak).
+* **GROUP BY (Gruplama):** Verileri belirli bir özelliğine göre kategorilere ayırıp özet (sayı, toplam vb.) çıkarmaktır. (Örn: Sistemdeki oyuncuları ülkelerine göre gruplayıp hangi ülkeden kaç kişi olduğunu saymak).
+* **HAVING (Grup Filtreleme):** Standart `WHERE` komutu satırları filtrelerken, `HAVING` komutu `GROUP BY` ile oluşturulmuş **grupları** filtreler. (Örn: Oyuncuları grupladıktan sonra sadece "1000'den fazla oyuncusu olan ülkeleri" listele demek).
+</details>
+
+<details>
+  <summary>İleri Seviye SQL Kavramları (Bölüm 2: Performans ve Güvenlik)</summary>
+  
+* **Index (İndeksleme):** Veritabanında arama işlemlerini inanılmaz derecede hızlandıran arka plan fihristidir. 1000 sayfalık kitapta bir kelimeyi sayfa sayfa aramak yerine kitabın arkasındaki "İçindekiler" bölümüne bakmak gibidir. Okuma hızını uçurur ancak yeni veri eklendiğinde fihristin de güncellenmesi gerektiğinden yazma işlemlerini ufak oranda yavaşlatır.
+* **View (Sanal Tablo / Görünüm):** Karmaşık sorguları kaydedip, sanki gerçek bir tabloymuş gibi kullanılmasını sağlayan pencerelerdir. (Örn: Güvenlik amacıyla bir çalışana tüm veritabanını vermek yerine, sadece "Maaşlar" sütununun gizlendiği bir "View" penceresi gösterilir).
+* **Stored Procedure (Saklı Yordam):** Veritabanı sunucusunun içine doğrudan kaydedilmiş kod bloklarıdır. "Sepeti onayla, stoktan düş, faturayı kes" gibi zincirleme işlemleri tek bir paket (makro) haline getirir. Uygulama sadece bu paketin adını çağırır, işlemler veritabanı içinde çok yüksek hızda ve güvenli bir şekilde peş peşe gerçekleşir.
+</details>
+
+<details>
+  <summary>ACID Prensipleri (Veritabanı Güvenilirlik Kuralları)</summary>
+  
+İlişkisel (SQL) veritabanlarında yapılan işlemlerin (transaction) güvenli ve hatasız bir şekilde tamamlanacağını garanti eden 4 temel kuraldır. Bankacılık ve borsa gibi sistemlerin hatasız çalışmasını sağlar.
+
+* **A - Atomicity (Bölünemezlik):** "Ya hep ya hiç" kuralıdır. Bir işlem birden fazla adımdan oluşuyorsa, ya tüm adımlar kusursuzca tamamlanır ya da işlem hata verirse sistem tamamen eski haline döner (Rollback). (Örn: Para transferinde para sizden çıkıp karşıya ulaşmazsa, sistem parayı size geri iade eder; işlem yarıda bırakılmaz).
+* **C - Consistency (Tutarlılık):** Yapılan her işlemin, veritabanındaki mevcut kurallara ve kısıtlamalara (constraints) uyması zorunluluğudur. (Örn: "Bakiye eksiye düşemez" kuralı varsa, sistem yetersiz bakiye ile işlem yapılmasına asla izin vermez).
+* **I - Isolation (İzolasyon):** Aynı saniyede gerçekleşen binlerce işlemin, birbirlerini etkilemeden sanki sıraya dizilmiş gibi tek tek yapılmasıdır. İşlemler birbirinin verisine müdahale edemez.
+* **D - Durability (Kalıcılık):** Başarıyla tamamlandığı (Commit) onaylanan bir verinin, anında elektrik kesilse veya sunucu çökse bile asla kaybolmaması, diske kalıcı olarak yazılmasıdır.
+</details>
+<details>
+  <summary>ORM (Object-Relational Mapping) Nedir?</summary>
+  
+* **Tanım:** Backend tarafında kullanılan Nesne Yönelimli Programlama (OOP) dillerindeki "Nesneler" ile İlişkisel Veritabanlarındaki (SQL) "Tablolar" arasında köprü kuran otomatik bir çevirmen sistemidir.
+* **Mantığı:** Yazılımcı kod tarafında bir `Kullanici` sınıfı (Class) oluşturduğunda, ORM bu sınıfı veritabanında bir "Kullanıcılar" tablosuna; sınıfın içindeki her bir özelliği (isim, yaş vb.) ise tablonun sütunlarına otomatik olarak haritalar (eşler).
+
+</details>
+
+<details>
+  <summary>ORM Kullanmanın Avantajları</summary>
+  
+* **Daha Az SQL (Less SQL):** Veritabanına kayıt eklemek, silmek veya okumak için uzun ve karmaşık SQL sorguları yazmak (Örn: `INSERT INTO...`) gerekmez. Geliştirici sadece kendi programlama dilindeki hazır metotları kullanır (Örn: `repository.save(kullanici)`). ORM bu komutu arka planda otomatik olarak kusursuz bir SQL sorgusuna çevirir.
+* **Hızlı Geliştirme (Fast Development):** Geliştirici SQL sözdizimi hatalarıyla veya veritabanı yapılandırmasıyla vakit kaybetmez. Sadece uygulamanın iş mantığına (business logic) odaklandığı için projeler çok daha hızlı geliştirilir.
+* **Veritabanı Bağımsızlığı:** Yazılan kod veritabanından bağımsızdır. Proje MySQL'den PostgreSQL'e taşınmak istendiğinde, yazılım kodlarında tek bir satır SQL sorgusu değiştirmeye gerek kalmaz; ORM yeni veritabanının diline anında adapte olur.
+
+</details>
+
+<details>
+  <summary>EF Core Nedir?</summary>
+  
+* **Tanım:** Microsoft tarafından .NET ekosistemi için geliştirilmiş, dünyanın en popüler ve yetenekli ORM (Object-Relational Mapping) aracıdır. C# kodları ile SQL veritabanı arasındaki iletişimi nesne yönelimli (OOP) bir yaklaşımla çözer.
+
+</details>
+
+<details>
+  <summary>DbContext ve DbSet Kavramları</summary>
+  
+* **DbContext (Veritabanı Bağlamı):** Uygulama ile veritabanı arasındaki ana köprü ve oturum yöneticisidir. Veritabanına bağlanma, değişiklikleri takip etme ve verileri kaydetme işlemlerinden sorumludur. (Örn: Bir garajın baş makinisti gibidir; garajla ilgili tüm iletişim ve işlemler onun üzerinden yürütülür).
+* **DbSet (Tablo Temsilcisi):** `DbContext` içinde yer alan ve veritabanındaki spesifik bir tabloyu (Örn: Kullanıcılar tablosu) temsil eden koleksiyonlardır. (Örn: Garajın içindeki belirli araçlara ayrılmış özel park alanlarıdır). Okuma, ekleme veya silme işlemleri ilgili `DbSet` üzerinden yapılır.
+
+</details>
+
+<details>
+  <summary>Migration (Veritabanı Güncellemesi)</summary>
+  
+* **Mantığı:** Geliştirme sürecinde yazılım kodları (Modeller/Sınıflar) sürekli değişir. Sınıfa yeni bir özellik eklendiğinde (Örn: Kullanıcıya 'Profil Fotoğrafı' eklemek), veritabanında bu özelliğin karşılığı olan bir sütun yoktur.
+* **Ne İşe Yarar?:** Migration, C# kodunda yapılan bu değişiklikleri algılayıp, veritabanındaki tabloları bu yeni duruma uygun hale getirmek için gereken SQL komutlarını otomatik olarak oluşturan "versiyonlama ve güncelleme" aracıdır.
+* **Özetle:** Kod ile veritabanı arasındaki yapıyı her zaman senkronize (uyumlu) tutmayı sağlayan mimari plan güncellemeleridir.
+
+</details>
+
+<details>
+  <summary>LINQ (Language Integrated Query) Nedir?</summary>
+  
+* **Tanım:** C# dilinin içine entegre edilmiş, koleksiyonlar (diziler, listeler) veya veritabanı tabloları (DbSet) üzerinde SQL benzeri sorgular yapmamızı sağlayan yapıdır.
+* **Mantığı:** Geliştiricinin karmaşık SQL metinleri yazmasına gerek kalmaz. Doğrudan C# nesneleri (OOP) kullanılarak yazılan LINQ komutları (Örn: `arabalar.Where(a => a.Marka == "BMW")`), EF Core tarafından arka planda otomatik olarak SQL sorgusuna dönüştürülüp veritabanına iletilir.
+</details>
+
+<details>
+  <summary>Temel LINQ Operasyonları</summary>
+  
+* **Where (Filtreleme):** Listedeki elemanlar arasından sadece verilen koşulu sağlayanları (Örn: Kilometresi 100 binden küçük olan araçları) süzüp getiren filtreleme metodudur.
+* **Select (Seçme / Dönüştürme):** Bir nesnenin tamamını değil, sadece istenilen belirli özelliklerini (Örn: Arabaların sadece plakalarını) çekmek veya veriyi farklı bir formata dönüştürmek için kullanılır. (Projeksiyon işlemi).
+* **OrderBy / OrderByDescending (Sıralama):** Listeyi belirtilen bir özelliğe göre küçükten büyüğe (veya tam tersi) sıralar. (Örn: Araçları üretim yılına göre eskiden yeniye dizmek).
+* **GroupBy (Gruplama):** Verileri ortak bir özelliğine göre alt kümelere ayırır. (Örn: Tüm araçları markalarına göre paketler halinde gruplandırmak).
+* **Join (Birleştirme):** Ortak bir değere (Örn: Müşteri ID) sahip iki farklı listeyi eşleştirip, iki tarafın verilerini içeren tek bir birleşik sonuç (Örn: Araçlar ve Sahipleri tablosu) üretir.
+</details>
+<details>
+  <summary>EF Core Yaklaşımları: Code First vs Database First</summary>
+
+Projelerde veritabanı ile yazılım kodu arasındaki köprüyü inşa etmeye hangi taraftan başlanacağını belirleyen iki temel felsefe vardır:
+
+* **Code First (Koddan Veritabanı Üretme):** Modern ve en yaygın yaklaşımdır. Ortada veritabanı yoktur. Geliştirici önce OOP mantığıyla C# sınıflarını (modellerini) yazar. Ardından EF Core (Migration aracıyla) bu kodlara bakar ve uygun SQL veritabanını sıfırdan inşa eder. *(Örn: Önce mimari planı kağıda çizip, sonra o plana göre gerçek binayı inşa etmektir. Kontrol kodlardadır.)*
+* **Database First (Veritabanından Model Üretme):** Genellikle halihazırda var olan eski/büyük projelere dahil olunduğunda kullanılır. Veritabanı zaten mevcuttur. EF Core (Scaffolding yöntemiyle) mevcut veritabanına bağlanır, tabloları inceler ve geliştiricinin kullanması için gerekli C# sınıflarını otomatik olarak üretir. *(Örn: Halihazırda var olan eski bir binanın içine girip, ölçümler yaparak o fiziksel binanın mimari krokisini kağıda dökmektir. Kontrol veritabanındadır.)*
+
+</details>
