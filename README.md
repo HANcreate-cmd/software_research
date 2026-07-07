@@ -945,3 +945,113 @@ REST mimarisinin yetersiz kaldığı, saniyelik güncellemelerin hayati olduğu 
 * **Özetle:** Backend ile Frontend arasındaki iletişimi sağlayan "Kabloyu ve Adaptörü" geliştiricinin yerine otomatik olarak üreten fabrika gibidir. Büyük bir zaman ve iş gücü tasarrufu sağlar.
 
 </details>
+
+## 14. .NET Ekosistemi
+
+<details>
+  <summary>.NET Nedir ve Tarihsel Gelişimi</summary>
+  
+* **.NET (Genel Tanım):** Microsoft'un geliştirdiği; masaüstü, web, bulut, mobil ve yapay zeka gibi A'dan Z'ye her türlü uygulamanın geliştirilebildiği devasa bir yazılım ekosistemidir.
+* **.NET Framework (Klasik Dönem):** Sistemlerin atasıdır (2002-2014). Çok güçlü ve stabil bir altyapısı vardır ancak **sadece Windows** işletim sistemlerinde çalışır. Günümüz modern sunucu mimarilerinde (Linux vb.) hantal kaldığı için artık yeni projelerde tercih edilmemektedir.
+* **.NET Core (Evrensel ve Modüler Dönem):** Microsoft'un eski sistemi bırakıp sıfırdan yazdığı; hafif, hızlı ve modüler olan yeni nesil altyapısıdır. En büyük devrimi **Cross-Platform (Çapraz Platform)** olmasıdır; yani Windows, Linux veya macOS fark etmeksizin her yerde kusursuz çalışır.
+* **Modern .NET (.NET 5 ve Sonrası):** Sektördeki isim karmaşasını bitirmek için "Framework" ve "Core" isimlerinin atılıp sistemlerin tek bir çatı altında birleştirilmiş halidir. Eski sistemin gücüyle yeni sistemin evrenselliğini (platform bağımsızlığını) tek bir motorda buluşturur.
+
+</details>
+
+<details>
+  <summary>Sürüm Stratejisi (LTS vs STS)</summary>
+
+Microsoft'un sürümleri yönetirken kullandığı "Tek - Çift Yıl" kuralıdır:
+
+* **LTS (Long Term Support - Çift Numaralar):** Uzun süreli destek versiyonlarıdır (.NET 6, 8, 10). 3 yıl boyunca yama ve güvenlik garantisi sunar. Kurumsal firmalar, bankalar ve büyük projeler sistemlerini riske atmamak için daima LTS sürümlerini kullanır. (Kur-unut mantığı).
+* **STS (Standard Term Support - Tek Numaralar):** Standart süreli destek versiyonlarıdır (.NET 7, 9). Sadece 18 ay desteklenir. Yeni teknolojilerin, performans iyileştirmelerinin ve yapay zeka entegrasyonlarının agresif şekilde test edildiği "geçiş/inovasyon" sürümleridir.
+
+</details>
+
+<details>
+  <summary>Güncel .NET Sürümleri (8, 9 ve 10)</summary>
+  
+* **.NET 8 (LTS):** 2023 sonunda çıkan, bulut (cloud-native) mimarileri ve hız konusunda ciddi temellerin atıldığı, son derece stabil çalışan uzun süreli ana sürümdür.
+* **.NET 9 (STS):** 2024 sonunda çıkan geçiş sürümüdür. .NET 8'in üzerine özellikle Yapay Zeka (AI) entegrasyonlarını kolaylaştıran, bulut sistemlerinde daha az bellek (RAM) tüketen, performans odaklı kısa ömürlü bir versiyondur.
+* **.NET 10 (LTS):** 2025 sonunda yayınlanan, en güncel zirve noktasıdır. .NET 9'daki tüm agresif yapay zeka ve performans iyileştirmelerini bünyesine alıp, 3 yıllık uzun süreli güvenlik garantisiyle paketleyen; kurumsal şirketlerin aktif olarak geçiş yaptığı tam donanımlı ana sürümdür.
+
+</details>
+
+<details>
+  <summary>Eski .NET (Framework) ile Yeni .NET (Core/Modern) Arasındaki Temel Farklar</summary>
+  
+* **Windows Bağımlılığı ve Platform Desteği:** * Eski sistem (.NET Framework) doğrudan Windows işletim sisteminin çekirdeğine bağımlıydı. Bir Linux veya macOS sunucusunda çalıştırılamazdı. 
+  * Yeni nesil .NET ise **Cross-Platform (Çapraz Platform)** mimarisine sahiptir. Aynı kod hiçbir değişikliğe uğramadan Windows, Linux ve macOS üzerinde kusursuz bir şekilde çalışır. Bu özellik, şirketleri pahalı Windows lisanslarından kurtarmıştır.
+* **Açık Kaynak (Open Source) Yaklaşımı:** * Eski sistem tamamen kapalı kapılar ardında (Closed Source) Microsoft tarafından geliştirilirdi. 
+  * Yeni sistem %100 açık kaynaklıdır (GitHub üzerinde). Dünyanın dört bir yanındaki bağımsız geliştiriciler ve rakip teknoloji devleri (Google, AWS vb.) bile .NET'in kodlarına katkıda bulunabilir, hataları anında çözebilir. Bu, sistemin gelişim hızını muazzam artırmıştır.
+* **Performans ve Modülerlik:** * Eski sistem (Monolitik) hantaldı; küçük bir proje yapsanız bile tüm devasa kütüphaneleri sisteme dahil ederdi, çok RAM tüketirdi. 
+  * Yeni sistem (Modüler) ise bir "Lego" gibidir. Çekirdek çok küçüktür ve geliştirici sadece projesinde kullanacağı özellikleri sisteme dahil eder (Örn: Sadece veritabanı kütüphanesini ekler). Bu hafiflik sayesinde inanılmaz hızlıdır, saniyeler içinde başlar ve bulut (cloud) sistemlerinde minimum maliyet/kaynak tüketimi sağlar.
+
+</details>
+
+<details>
+  <summary>.NET'in Mimari Bileşenleri: CLR ve Runtime</summary>
+  
+* **Runtime (Çalışma Zamanı):** Yazılan kodun bilgisayar üzerinde canlı olarak çalıştırılması, belleğin (RAM) yönetilmesi ve hataların denetlenmesi işlemlerini üstlenen çalışma ortamıdır.
+* **CLR (Common Language Runtime):** .NET platformunun kalbidir (Motor beyni/Tercümanı). C# gibi dillerde yazılan insan okumasına yakın kodları, program çalıştığı anda (Just-In-Time) o an üzerinde bulunduğu işletim sisteminin anlayacağı makine koduna (0 ve 1'lere) çeviren çekirdek yapıdır.
+
+</details>
+
+<details>
+  <summary>Kestrel Web Sunucusu Nedir?</summary>
+  
+* **Tanım:** Modern .NET (ASP.NET Core) projelerinin içinde varsayılan olarak gelen, açık kaynaklı, Cross-Platform (her işletim sisteminde çalışan) web sunucusudur.
+* **Ne İşe Yarar?:** Uygulamaya dış dünyadan gelen web isteklerini (HTTP Requests) kapıda karşılayan ve yanıtları (Responses) geri gönderen sistemdir. Çok hafif olduğu için saniyede yüz binlerce isteği işleyebilecek kadar yüksek bir hıza (throughput) sahiptir.
+
+</details>
+
+<details>
+  <summary>Linux ve Docker Desteğinin Önemi</summary>
+
+* **Linux Desteği:** Yeni nesil CLR'ın yetenekleri sayesinde .NET projeleri artık Windows sunuculara mahkum değildir. Aynı kod hiçbir değişikliğe uğramadan Linux sunucularda da çalışır. Bu da kurumsal şirketlere sunucu lisanslama (hosting) konusunda milyonlarca dolarlık tasarruf sağlar.
+* **Docker Entegrasyonu:** Modern .NET; çok hafif, modüler ve Linux tabanlı olabilmesi sayesinde Docker konteyner (Container) mimarisine kusursuz uyum sağlar. Geliştirilen bir API, tek bir komutla minimal bir Linux/Docker imajı içine paketlenip bulut (Cloud/Kubernetes) sistemlerinde saniyeler içinde binlerce kopyaya çıkarılabilir (ölçeklenebilir).
+
+</details>
+
+<details>
+  <summary>Managed Code (Yönetilen Kod) vs Unmanaged Code</summary>
+  
+* **Managed Code:** C# gibi .NET dilleriyle yazılan ve doğrudan **CLR'ın (Common Language Runtime)** koruması, denetimi ve kuralları altında çalışan kod türüdür. Bellek yönetimi ve güvenlik CLR tarafından otomatik olarak sağlanır. (Örn: Tüm elektronik güvenlik asistanlarına sahip yeni nesil akıllı bir araç kullanmak gibidir; sistem hata yapmanızı engeller).
+* **Unmanaged Code:** C veya C++ gibi dillerle yazılan, CLR'ın dışında doğrudan işletim sistemi üzerinde çalışan koddur. Çok yüksek hız ve donanım kontrolü sağlar ancak tüm bellek yönetimi ve güvenlik sorumluluğu tamamen geliştiricinin omuzlarındadır. (Örn: Hiçbir güvenlik asistanı olmayan eski tip bir yarış arabasıdır; kontrol tamamen sizdedir ancak hata affetmez).
+
+</details>
+
+<details>
+  <summary>Memory Management (Bellek Yönetimi) ve Garbage Collector</summary>
+  
+* **Bellek Sorunu (Memory Leak):** Uygulamalar çalışırken sürekli RAM'de veri (nesne) oluştururlar. İşlemi biten veriler RAM'den silinmezse hafıza dolar ve sistem çöker. Unmanaged dillerde bu silme işlemini kod ile manuel yapmak zorunludur.
+* **Garbage Collector (Çöp Toplayıcı):** .NET CLR'ın içinde yer alan otomatik bellek temizleme mekanizmasıdır. Arka planda sürekli çalışarak RAM'i tarar ve program tarafından artık kullanılmayan/referansı kalmayan nesneleri tespit edip bellekten otomatik olarak siler.
+* **Mantığı:** Restorandaki komi (temizlik görevlisi) gibidir. Geliştirici tıpkı bir müşteri gibi sadece işine odaklanır, masadan (kapsamdan) ayrıldığında arka plandaki komi (Garbage Collector) gelip o boşalan verileri RAM'den silerek sistemi her zaman ferah ve çalışır durumda tutar.
+
+</details>
+
+<details>
+  <summary>NuGet Nedir? (Paket Yönetimi)</summary>
+  
+* **Tanım:** .NET ekosisteminin resmi paket yönetim sistemidir. Tıpkı telefonlardaki App Store veya Google Play Store gibi geliştiriciler için bir "Hazır Kod / Kütüphane Mağazası"dır.
+* **Mantığı:** Yazılımcılar tekerleği yeniden icat etmemek için, başkalarının yazdığı (örneğin PDF oluşturma, veritabanına bağlanma veya ödeme alma) hazır kod bloklarını kendi projelerine NuGet üzerinden saniyeler içinde dahil ederler. Dışa bağımlılıkların (dependencies) tüm versiyon kontrolleri ve güncellemeleri tek bir merkezden yönetilir.
+
+</details>
+
+<details>
+  <summary>Paket Yayınlama (Publishing)</summary>
+  
+* **Mantığı:** NuGet sadece dışarıdan paket indirme (consume) yeri değildir. Geliştiriciler, kendi yazdıkları başarılı ve tekrar kullanılabilir kod kütüphanelerini `.nupkg` formatında paketleyip `nuget.org` üzerinde yayınlayabilirler. Böylece bu paketler, şirket içindeki diğer takımlar veya tüm dünyadaki açık kaynak (open-source) toplulukları tarafından projelere dahil edilebilir.
+
+</details>
+
+<details>
+  <summary>Versiyonlama Mantığı (Semantic Versioning - SemVer)</summary>
+
+Yayınlanan paketlerin güncellemelerini takip etmek için **Major.Minor.Patch (Örn: 1.4.2)** kuralı kullanılır:
+
+* **Patch (Yama - x.x.2):** Sadece mevcut hataların (bug) düzeltildiği güncellemelerdir. Eski kodları asla bozmaz, güvenle yükseltilebilir.
+* **Minor (Küçük Özellik - x.4.x):** Sisteme yepyeni özelliklerin eklendiği ancak eski sistemin işleyişini ve fonksiyonlarını bozmayan (geriye dönük uyumlu) güncellemelerdir.
+* **Major (Büyük ve Kırıcı Değişim - 1.x.x):** Mimarinin tamamen değiştiği, "Kırıcı Değişiklikler" (Breaking Changes) içeren güncellemelerdir. Bu güncelleme alındığında geliştiricinin kendi projesindeki kodları da yeni mimariye göre değiştirmesi (refactor) gerekir.
+
+</details>
