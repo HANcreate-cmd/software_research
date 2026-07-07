@@ -1055,3 +1055,76 @@ Yayınlanan paketlerin güncellemelerini takip etmek için **Major.Minor.Patch (
 * **Major (Büyük ve Kırıcı Değişim - 1.x.x):** Mimarinin tamamen değiştiği, "Kırıcı Değişiklikler" (Breaking Changes) içeren güncellemelerdir. Bu güncelleme alındığında geliştiricinin kendi projesindeki kodları da yeni mimariye göre değiştirmesi (refactor) gerekir.
 
 </details>
+
+## 15. ASP.NET Core 
+
+<details>
+  <summary>ASP.NET Core Nedir?</summary>
+  
+* **Tanım:** .NET ekosistemi üzerinde çalışan; modern web uygulamaları, e-ticaret siteleri, mikro servisler ve REST API'ler geliştirmek için kullanılan açık kaynaklı bir web framework'üdür (çatısıdır).
+* **Mantığı:** .NET bir temel motor ise, ASP.NET Core o motorun üzerine inşa edilen, dış dünyadan (internet tarayıcılarından, mobil cihazlardan) gelen HTTP isteklerini karşılayıp cevaplayan aerodinamik bir kasadır.
+
+</details>
+
+<details>
+  <summary>Temel Avantajları</summary>
+  
+* **Yüksek Performans:** Eski monolitik sistemlerin aksine modülerdir (sadece ihtiyacınız olan paketleri yüklersiniz). İçine gömülü gelen **Kestrel** web sunucusu sayesinde son derece az RAM tüketir ve dünyadaki en yüksek tepki/istek hızlarına sahip framework'lerden biridir.
+* **Cross-Platform (Çapraz Platform):** Geliştirilen bir web projesi Windows'a bağımlı değildir. Hiçbir kod değişikliği yapmadan macOS üzerinde geliştirilip, Linux sunucularda veya Docker konteynerleri içinde kusursuzca (ve lisans masrafı olmadan) çalıştırılabilir.
+* **Açık Kaynak (Open Source):** Tüm kaynak kodları GitHub üzerinde barındırılır. Dünyanın dört bir yanındaki binlerce geliştiricinin (ve Microsoft dışı teknoloji devlerinin) ortak katkısıyla sürekli olarak güncellenir, hatalardan arındırılır ve modern kalır.
+
+</details>
+
+<details>
+  <summary>MVC (Model-View-Controller) Mimari Deseni</summary>
+  
+* **Tanım:** Karmaşık yazılım projelerinde "karmaşayı önlemek" ve kodun bakımını kolaylaştırmak için projeyi üç bağımsız ana katmana bölen yazılım mimarisi şablonudur.
+* **Mantığı:** Tasarım (HTML/CSS), veri işleme kuralları ve yönlendirme işlemleri birbirine karıştırılmaz. Her katman (klasör) sadece kendi sorumluluğunu yerine getirir. (Seperation of Concerns - Sorumlulukların Ayrılığı prensibi).
+
+</details>
+
+<details>
+  <summary>MVC Katmanları ve Görevleri</summary>
+
+* **Model (Veri ve İş Mantığı):** Uygulamanın beynidir. Veritabanı işlemleri (veriyi çekme, kaydetme) ve iş kuralları (hesaplamalar, doğrulamalar) burada yapılır. Görsel kısımla (ekranla) hiçbir ilgisi yoktur. *(Örn: Restoranın yemeği pişiren ve malzemeleri saklayan mutfağıdır).*
+* **View (Görünüm / Kullanıcı Arayüzü):** Kullanıcının cihazında veya tarayıcısında gördüğü ekranlardır (HTML, CSS, butonlar vb.). Arka plandaki kodlardan habersizdir, sadece kendisine verilen veriyi son kullanıcıya şık bir şekilde sunmakla görevlidir. *(Örn: Restoranın şık masaları ve yemeğin görsel sunumudur).*
+* **Controller (Yönlendirici / Köprü):** Gelen istekleri karşılayan orkestra şefidir. View ile Model asla birbirleriyle doğrudan konuşmaz. Controller, kullanıcıdan gelen isteği (tıklamayı) View'dan alır, işlenmesi için Model'e gönderir. Modelden gelen sonucu da alıp uygun bir View'a (ekrana) yansıtarak süreci tamamlar. *(Örn: Müşteriden siparişi alıp mutfağa ileten ve pişen yemeği masaya geri getiren garson).*
+
+</details>
+
+<details>
+  <summary>Middleware ve Middleware Pipeline Nedir?</summary>
+  
+* **Middleware (Ara Yazılım):** Uygulamaya dışarıdan gelen HTTP isteklerini (Request) karşılayan, üzerinde belirli kontroller veya işlemler yapan ve gerekirse isteği reddedip cevabı (Response) geri döndüren küçük, bağımsız kod bloklarıdır. (Örn: Havalimanındaki bir X-Ray cihazı veya pasaport kontrol noktası).
+* **Middleware Pipeline (İşlem Boru Hattı):** Birden fazla Middleware'in belirli bir sırayla arka arkaya dizildiği zincirdir. Dışarıdan gelen istek, hedefine (Controller'a) ulaşmadan önce bu koridordaki her bir kontrol noktasından sırayla geçmek zorundadır.
+
+</details>
+
+<details>
+  <summary>Sık Kullanılan Middleware Örnekleri</summary>
+
+* **Logging (Kayıt Tutma):** Sisteme gelen tüm isteklerin, hataların ve sürelerin arka planda bir dosyaya veya veritabanına kaydedilmesini sağlar. *(Havalimanı girişindeki her şeyi sessizce kaydeden güvenlik kamerasıdır).*
+* **Authentication (Kimlik Doğrulama):** İsteği yapan kişinin iddia ettiği kişi olup olmadığını denetler (Kullanıcı Adı/Şifre veya Token kontrolü). *(Polisin "Sen kimsin?" diyerek pasaportunuzu kontrol etmesidir).*
+* **Authorization (Yetkilendirme):** Kimliği doğrulanmış kişinin, ulaşmaya çalıştığı adrese yetkisinin (Role/Permission) olup olmadığını kontrol eder. *(VIP salonu görevlisinin, biletinizin o salona girmeye yetip yetmediğini kontrol etmesidir).*
+* **Exception Handling (Hata Yönetimi):** Uygulamanın herhangi bir yerinde sistem çökerse veya hata fırlatılırsa, kullanıcının ekranına karmaşık kod hatalarının yansımasını engelleyen ve süreci şık bir "Sistemde geçici bir hata oluştu" mesajıyla toparlayan kurtarıcı katmandır. *(Havalimanındaki bir kriz anında, paniği önleyip süreci profesyonelce yöneten acil müdahale ekibi).*
+
+</details>
+
+<details>
+  <summary>Dependency Injection (Bağımlılık Enjeksiyonu) Nedir?</summary>
+  
+* **Tanım:** Bir sınıfın (class) çalışması için ihtiyaç duyduğu diğer nesneleri (bağımlılıkları) kendi içinde `new` anahtar kelimesiyle sıfırdan üretmek yerine; bu nesnelerin dışarıdan merkezi bir sistem (IoC Container) tarafından o sınıfa hazır olarak verilmesi (enjekte edilmesi) prensibidir.
+* **Mantığı ve Avantajı:** Bir aşçının kendi tavasını dökümhanede üretmesi yerine (bağımlılık yaratmak), sadece "Bana tava lazım" diyerek restoran yönetiminden (DI Container) hazır tava talep etmesidir. Bu sayede kodlar birbirinden bağımsız (Loosely Coupled) hale gelir, test edilebilirliği inanılmaz ölçüde artar ve sistemdeki karmaşa son bulur.
+
+</details>
+
+<details>
+  <summary>Service Lifetimes (Yaşam Döngüleri): Transient, Scoped, Singleton</summary>
+
+Dependency Injection sistemine kaydedilen nesnelerin hafızada (RAM) ne kadar süre tutulacağını ve ne sıklıkla yenileneceğini belirleyen 3 temel yaşam döngüsü vardır:
+
+* **Transient (Kullan-At):** Nesne (servis) kim tarafından ne zaman talep edilirse edilsin, **her defasında sıfırdan yepyeni** bir kopya oluşturulur. İşlem bitince hemen silinir. *(Örn: Her isteyene yepyeni verilen kağıt peçete).*
+* **Scoped (İstek Başına):** Gelen her bir HTTP İsteği (Request) için sadece bir tane kopya oluşturulur. O istek (request) uygulamanın içinde dolaştığı sürece herkes aynı kopyayı kullanır. İstek sonlanınca silinir. Web projelerinde veritabanı (DbContext) bağlantıları için standart yöntemdir. *(Örn: Bir müşteri masasına açılan adisyon fişidir. Müşteri kalkana kadar tüm garsonlar o masanın aynı fişine işlem yapar).*
+* **Singleton (Tek Ortak Kopya):** Uygulama sunucuda ilk başladığı anda nesne 1 kez oluşturulur. Sunucu kapanana kadar gelen tüm kullanıcılara ve tüm HTTP isteklerine **aynı kopya** (aynı RAM adresi) verilir. *(Örn: Restorandaki ortak çay kazanıdır. Gün boyunca herkes aynı kazanı paylaşır).*
+
+</details>
