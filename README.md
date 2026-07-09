@@ -1489,3 +1489,50 @@ Kod hem satır satır İngilizce gibi okunabilir olur hem de son derece düzenli
 * **Yazılım Örneği:** Telefonunuzdaki Instagram veya Twitter uygulamasına aylarca şifre girmemenizin sebebidir. Arka planda Access Token sürekli ölür, ancak uygulama Refresh Token'ı kullanarak siz hissetmeden sunucudan sürekli taze jetonlar alır. Şüpheli bir durum olursa sunucu Refresh Token'ı iptal eder ve sizden tekrar şifre ister.
 
 </details>
+
+## 18. Güvenlik
+
+### OWASP Top 10
+
+<details>
+  <summary>OWASP Top 10 Nedir?</summary>
+  
+* **Tanım:** OWASP (Open Web Application Security Project), web uygulamalarının güvenliğini artırmayı hedefleyen bağımsız bir vakıftır. Belirli aralıklarla yayınladığı "OWASP Top 10" listesi, dünyada en sık karşılaşılan, en tehlikeli 10 siber güvenlik açığını barındıran küresel bir standarttır.
+
+</details>
+
+<details>
+  <summary>SQL Injection (SQL Enjeksiyonu)</summary>
+  
+* **Mantığı:** Veritabanına (SQL) gönderilen sorguların arasına, kötü niyetli veritabanı komutları sıkıştırarak sistemi manipüle etmektir.
+* **Gerçek Hayat Örneği:** Kütüphaneciye "Bana bir kitap ver, ayrıca kasanın anahtarını da bırak" diyerek onu kandırmak ve izinsiz işlem yaptırmaktır.
+* **Yazılım Örneği:** Kullanıcı adı veya arama çubuğu alanına masum bir kelime yerine `admin' OR '1'='1` gibi bir SQL komutu yazılır. Sistem bunu doğrudan kod olarak algılayıp çalıştırırsa, şifre yanlış olsa bile saldırgan veritabanının tüm yetkilerine sahip olarak sisteme sızar veya tabloları tamamen silebilir.
+
+</details>
+
+<details>
+  <summary>XSS (Cross-Site Scripting)</summary>
+  
+* **Mantığı:** Hedefin doğrudan sunucu değil, o siteyi kullanan diğer kullanıcılar olduğu saldırı türüdür. Sisteme zararlı bir kod (Genellikle JavaScript) enjekte edilir ve bu kod, siteyi ziyaret eden masum kullanıcıların tarayıcısında çalışır.
+* **Gerçek Hayat Örneği:** Herkesin okuduğu kasaba panosuna (web sitesi), üzerine zehir sürülmüş bir ilan (zararlı kod) asmaktır. İlanı okuyan herkes zehirlenir.
+* **Yazılım Örneği:** Bir forumun yorum kısmına `<script>...zararlı_kod...</script>` yazılır. Bu yorum veritabanına kaydedilir. Sayfaya giren her kullanıcının tarayıcısı bu yorumu okuduğunda içindeki zararlı kod çalışır ve o kullanıcının oturum anahtarlarını (Token) veya çerezlerini (Cookie) gizlice hacker'ın sunucusuna gönderir.
+
+</details>
+
+<details>
+  <summary>CSRF (Cross-Site Request Forgery)</summary>
+  
+* **Mantığı:** Sisteme başarıyla giriş yapmış (Oturumu açık) bir kullanıcının tarayıcısını kandırarak, kullanıcının haberi ve rızası olmadan onun yetkisiyle işlemler yaptırmaktır.
+* **Gerçek Hayat Örneği:** Bankada gişe işlemi yaparken, bir dolandırıcının evrakların arasına "Tüm paramı şuraya gönder" talimatı sıkıştırıp size okutmadan imzalattırmasıdır (Sizin açık olan güvenli oturumunuzu kullanır).
+* **Yazılım Örneği:** Banka hesabınız açıkken başka bir sekmede zararlı bir siteye girdiniz. Bu zararlı site arka planda sizin tarayıcınıza `banka.com/para-transfer?kime=hacker` isteği attırır. Tarayıcınız zaten bankaya giriş yapmış olduğu için banka bu isteği sizin yaptığınızı sanır ve işlemi onaylar.
+
+</details>
+
+<details>
+  <summary>Broken Authentication (Kırık Kimlik Doğrulama)</summary>
+  
+* **Mantığı:** Sistemin giriş, şifre ve oturum yönetimi (Token) mekanizmalarının hatalı, zayıf veya eksik kurgulanması sonucu hesapların ele geçirilmesidir.
+* **Gerçek Hayat Örneği:** Çelik kapıya mükemmel bir şifreli kilit takıp, şifreyi herkesin deneyebileceği kadar basit ("1234") yapmak veya anahtarı paspasın altında bırakmaktır.
+* **Yazılım Örneği:** Kullanıcıların zayıf şifreler belirlemesine izin verilmesi, çoklu şifre deneme (Brute Force) saldırılarına karşı sistemin kilitlenmemesi veya kullanıcı başarılı giriş yapsa bile ona verilen oturum biletinin (Session ID / Token) URL çubuğunda açıkça görünür halde aktarılmasıdır.
+
+</details>
