@@ -1536,3 +1536,61 @@ Kod hem satır satır İngilizce gibi okunabilir olur hem de son derece düzenli
 * **Yazılım Örneği:** Kullanıcıların zayıf şifreler belirlemesine izin verilmesi, çoklu şifre deneme (Brute Force) saldırılarına karşı sistemin kilitlenmemesi veya kullanıcı başarılı giriş yapsa bile ona verilen oturum biletinin (Session ID / Token) URL çubuğunda açıkça görünür halde aktarılmasıdır.
 
 </details>
+
+### Şifreleme
+
+<details>
+  <summary>Encryption (Çift Yönlü Şifreleme)</summary>
+  
+* **Mantığı:** Veriyi gizlemek ve sonrasında yetkili bir kişi (veya sistem) tarafından tekrar orijinal haline dönüştürülmek üzere kilitlenmesidir. "Çift yönlü" (Geri döndürülebilir) bir işlemdir.
+* **Gerçek Hayat Örneği:** Değerli bir eşyayı kasaya kilitlemektir. Doğru anahtara (Key) sahip olan kişi kasayı açıp eşyayı eski haliyle geri alabilir.
+* **Yazılım Örneği:** Uçtan uca şifreli mesajlaşma uygulamaları (WhatsApp) veya kredi kartı numarasının internet üzerinden bankaya gönderilmesi işlemidir. Veri yolda şifrelenir (Encryption), sunucuya ulaşınca gizli anahtarla çözülür (Decryption).
+
+</details>
+
+<details>
+  <summary>Hashing (Tek Yönlü Şifreleme / Özetleme)</summary>
+  
+* **Mantığı:** Veriyi karmaşık bir algoritmaya sokarak sabit uzunlukta, geri döndürülemez bir metin dizisine çevirme işlemidir. "Tek yönlüdür", yani şifrelenen veri **asla orijinal haline geri getirilemez.**
+* **Gerçek Hayat Örneği:** Bir parça eti kıyma makinesine atmaktır. Çıkan kıymayı bir daha asla eski bütün et haline getiremezsiniz.
+* **Yazılım Örneği:** Sistemde kullanıcı şifrelerinin saklanmasıdır. Sistem yöneticisi dahil kimse sizin gerçek şifrenizi ("123456") veritabanında göremez. Şifreniz Hashlenip (`e10adc...` şeklinde) kaydedilir. Kullanıcı giriş yaptığında girdiği şifre anlık olarak tekrar hashlenir ve veritabanındaki kayıtla eşleşip eşleşmediğine bakılır.
+
+</details>
+
+<details>
+  <summary>Salting (Tuzlama)</summary>
+  
+* **Mantığı:** Hashing algoritmasına giren aynı şifrelerin (Örn: İki kişinin de şifresinin "123456" olması durumu) aynı Hash çıktısını üretmesini engellemek için, verinin sonuna veya başına rastgele karakter dizileri (Tuz) eklenmesidir.
+* **Gerçek Hayat Örneği:** İki aynı yemeğin, birine gizli bir baharat katılarak tatlarının birbirinden tamamen farklı hale getirilmesidir.
+* **Yazılım Örneği:** Bir hacker, veritabanını çaldığında yaygın şifrelerin ("123456", "password") Hash karşılıklarını önceden oluşturduğu devasa listelerle (Rainbow Tables) eşleştirerek kolayca çözebilir. Salting işleminde, her kullanıcının şifresine eşsiz bir rastgele metin eklenip öyle Hash'lendiği için hacker'ın elindeki bu hazır eşleştirme listeleri tamamen çöp olur.
+
+</details>
+
+### Ağ Güvenliği
+
+<details>
+  <summary>SSL (Secure Sockets Layer)</summary>
+  
+* **Mantığı:** İstemci (Kullanıcı) ile Sunucu arasındaki veri akışını şifreleyerek, verilerin yolda (Man-in-the-Middle) çalınmasını veya okunmasını engellemek amacıyla 1990'larda geliştirilen ilk güvenlik protokolüdür.
+* **Gerçek Hayat Örneği:** Postayla gönderilen açık bir kartpostalı (HTTP), kilitli ve şifreli bir çelik çantanın içine koyarak göndermektir. Yoldaki postacı çantayı taşıyabilir ama içindeki yazıyı okuyamaz.
+* **Mevcut Durumu:** SSL'in tüm versiyonları (SSL 1.0, 2.0, 3.0) içerdiği ciddi güvenlik açıkları nedeniyle **günümüzde tamamen kullanımdan kaldırılmıştır.** Ancak sektördeki ağız alışkanlığı nedeniyle modern güvenlik sertifikaları hala "SSL Sertifikası" adıyla pazarlanmaktadır.
+
+</details>
+
+<details>
+  <summary>TLS (Transport Layer Security)</summary>
+  
+* **Mantığı:** Emekliye ayrılan SSL'in yerini alan, onun güvenlik açıklarını kapatan ve çok daha güçlü şifreleme algoritmaları (kriptografi) kullanan güncel ve modern taşıma katmanı güvenliğidir.
+* **Gerçek Hayat Örneği:** Eski kilitli çantanın yerine, kırılamayan titanyum şifreli ve parmak izi okuyuculu yeni nesil bir çanta kullanılmasıdır.
+* **Yazılım Örneği:** Bugün modern tarayıcıların tamamı veri şifrelemek için TLS 1.2 veya TLS 1.3 kullanır. İletişim başlamadan önce istemci ve sunucu arasında "TLS Handshake" (El Sıkışma) gerçekleşir, şifreleme yöntemleri üzerinde anlaşılır ve veri transferi ancak bu güvenli tünel kurulduktan sonra başlar.
+
+</details>
+
+<details>
+  <summary>HTTPS (Hypertext Transfer Protocol Secure)</summary>
+  
+* **Mantığı:** Web sitelerinin standart iletişim dili olan HTTP'nin, TLS (veya eski adıyla SSL) şifreleme katmanı üzerinden geçirilerek güvenli hale getirilmiş versiyonudur. (HTTPS = HTTP + TLS).
+* **Gerçek Hayat Örneği:** HTTP'yi standart bir nakliye kamyonu, TLS'i ise çelik zırh plakaları olarak düşünürsek; HTTPS bu ikisinin birleşimi olan "Zırhlı Para Taşıma Aracı"dır. 
+* **Yazılım Örneği:** Standart HTTP 80 portundan çalışır ve girilen şifreleri, kredi kartı numaralarını kablolar üzerinden okunabilir düz metin (Plaintext) olarak iletir. HTTPS ise 443 portundan çalışır ve veriyi anlamsız, çözülemez bir şifreli metne çevirerek iletir. Tarayıcılardaki "Kilit" simgesi sitenin HTTPS kullandığını gösterir.
+
+</details>
