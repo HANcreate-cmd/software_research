@@ -1405,7 +1405,7 @@ Kod hem satır satır İngilizce gibi okunabilir olur hem de son derece düzenli
 
 </details>
 
-## 17.Authentication & Authorization
+## 17. Authentication & Authorization
 
 <details>
   <summary>JWT (JSON Web Token) Nedir?</summary>
