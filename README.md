@@ -1128,3 +1128,279 @@ Dependency Injection sistemine kaydedilen nesnelerin hafızada (RAM) ne kadar s�
 * **Singleton (Tek Ortak Kopya):** Uygulama sunucuda ilk başladığı anda nesne 1 kez oluşturulur. Sunucu kapanana kadar gelen tüm kullanıcılara ve tüm HTTP isteklerine **aynı kopya** (aynı RAM adresi) verilir. *(Örn: Restorandaki ortak çay kazanıdır. Gün boyunca herkes aynı kazanı paylaşır).*
 
 </details>
+
+## 16. Yazılım Tasarım Prensipleri 
+
+<details>
+  <summary>SOLID Prensipleri</summary>
+  
+* **Tanım:** Sistemin gelişime açık, değişime kapalı olmasını ve parçaların birbirine körü körüne bağlanmamasını sağlayan, "Temiz Kod" (Clean Code) yazmanın 5 temel evrensel kuralıdır.
+* **S - Single Responsibility Principle (Tek Sorumluluk):** Bir sınıfın veya metodun sadece tek bir görevi olmalıdır. (Örn: Bir `TxtFileReader` sınıfı sadece dosyayı okumalıdır; içindeki kelimeleri sayma veya analiz etme işi başka bir sınıfa bırakılmalıdır).
+* **O - Open/Closed Principle (Açık/Kapalı):** Kod genişletilmeye açık, ancak değiştirilmeye kapalı olmalıdır. (Örn: Sisteme PDF okuma desteği ekleneceğinde, halihazırda kusursuz çalışan TXT okuma kodlarına dokunulmaz; sisteme dışarıdan yepyeni bir `PdfFileReader` sınıfı dahil edilir).
+* **L - Liskov Substitution Principle (Yerine Geçme):** Alt sınıflar, türedikleri üst sınıfların veya uyguladıkları arayüzlerin (interface) tüm davranışlarını eksiksiz karşılayabilmelidir. Alt sınıf kullanıldığında sistem hata vermemelidir.
+* **I - Interface Segregation Principle (Arayüz Ayrıştırma):** Sınıflar, kullanmayacakları metotları barındıran devasa arayüzleri (Interface) uygulamaya zorlanmamalıdır. Arayüzler amaca özel ve olabildiğince küçük tutulmalıdır.
+* **D - Dependency Inversion Principle (Bağımlılığın Tersine Çevrilmesi):** Üst seviye modüller (Örn: Ana Program), alt seviye modüllere (Örn: TxtFileReader) doğrudan göbekten bağlı olmamalıdır. Her iki taraf da sadece soyutlamalara (Örn: `IFileReader` arayüzüne) bağımlı olmalıdır.
+
+</details>
+
+<details>
+  <summary>DRY (Don't Repeat Yourself)</summary>
+  
+* **Mantığı:** Aynı kod bloğunun veya mantığın, projenin farklı yerlerinde kopyala-yapıştır yapılarak defalarca kullanılmasını yasaklayan prensiptir.
+* **Nasıl Uygulanır:** Tekrar eden işlemler merkezi bir metoda veya servise taşınır. (Örn: Her `catch` (hata yakalama) bloğunun içine dosyaya yazdırma kodlarını sıfırdan yazmak yerine, merkezi bir `Logger.Log()` metodu oluşturulup her yerden sadece bu isim çağrılır).
+* **Avantajı:** Yarın bir gün loglama formatı veya veritabanı adresi değiştiğinde, projede 50 farklı yeri değil, sadece o tek merkezi dosyayı değiştirmek yeterli olur. Bakım maliyetini inanılmaz düşürür.
+
+</details>
+
+<details>
+  <summary>KISS (Keep It Simple, Stupid)</summary>
+  
+* **Mantığı:** Bir problemi çözerken kodu olabildiğince en basit, en anlaşılır ve en yalın haliyle yazmayı hedefler. Sanat eseri yaratmaya çalışıp karmaşık algoritmalarla kodu okunmaz hale getirmeyi yasaklar.
+* **Nasıl Uygulanır:** Kelimeleri saymak için iç içe geçmiş karmaşık pointer'lar veya 4 katlı `for` döngüleri kullanmak yerine, temiz bir `Regex` kuralı ve ardından tek satırlık bir `LINQ` sorgusu kullanılarak problem çok daha az ve öz kodla çözülür.
+* **Avantajı:** Kodu yazan kişi haricinde, projeye sonradan dahil olan başka bir geliştiricinin de kodu baktığı an saniyeler içinde anlamasını sağlar. Hata (bug) çıkma olasılığını minimize eder.
+
+</details>
+
+<details>
+  <summary>YAGNI (You Ain't Gonna Need It)</summary>
+  
+* **Mantığı:** "Belki ileride hoca veya müşteri bunu da ister" düşüncesiyle, projeye henüz istenmeyen ve gelecekte kullanılma ihtimali kesin olmayan özellikleri erkenden eklemeyi engelleyen prensiptir.
+* **Nasıl Uygulanır:** Eğer istenen uygulama sadece o anlık okunan dosyayı konsola basacaksa, "Belki ileride veritabanı isterler" diyerek projeye SQL bağlantıları veya Entity Framework eklenmez. İstenen özellik sadece "o an" yapılır.
+* **Avantajı:** Geliştiricinin hem vakit kaybetmesini önler hem de projenin içini gereksiz, ölü kod yığınlarıyla doldurup (Over-engineering) sistemi hantallaştırmasını engeller. İhtiyaç olunca eklemek her zaman en doğrusudur.
+
+</details>
+
+### Design Patterns
+
+<details>
+  <summary>Design Patterns ve Creational (Yaratımsal) Desenler Nedir?</summary>
+  
+* **Design Patterns (Tasarım Desenleri):** Yazılım geliştirme sürecinde sıkça karşılaşılan, birbirine benzeyen sorunları çözmek için dünya çapındaki tecrübeli yazılımcılar tarafından bulunmuş, test edilmiş ve standartlaştırılmış "en iyi çözüm şablonlarıdır". Tekerleği yeniden icat etmeni engeller.
+* **Creational Patterns (Yaratımsal Desenler):** Nesnelerin (Object) bellekte (RAM) "nasıl ve ne zaman oluşturulacağı" ile ilgilenen tasarım desenleri grubudur. Nesne yaratma sürecini esnekleştirir ve `new` anahtar kelimesinin yarattığı bağımlılıkları (sıkı bağları) azaltır.
+
+</details>
+
+#### Creational
+
+<details>
+  <summary>Creational (Yaratımsal) Desenler Nedir?</summary>
+  
+* **Tanım:** Nesnelerin (Object) bellekte (RAM) nasıl, ne zaman ve kim tarafından oluşturulacağı ile ilgilenen tasarım desenleri grubudur.
+* **Amacı:** Kodun içinde her yere doğrudan `new` anahtar kelimesini yazarak sınıfları birbirine sıkı sıkıya bağlamayı (bağımlılık yaratmayı) engeller. Nesne yaratma sürecini esnekleştirir, karmaşıklığını gizler ve daha yönetilebilir standart bir hale getirir.
+
+</details>
+
+<details>
+  <summary>Singleton (Tekil) Tasarım Deseni</summary>
+  
+* **Mantığı:** Bir sınıfın (Class) programın yaşam döngüsü boyunca bellekte (RAM) sadece **tek bir kopyasının (instance)** olmasını garanti eden ve ona projenin her yerinden ulaşılmasını sağlayan desendir.
+* **Nasıl Uygulanır:** Sınıfın kurucu metodu (Constructor) `private` (gizli) yapılır ki dışarıdan kimse `new` kelimesiyle yepyeni bir kopyasını üretemesin. Kopya, sadece sınıfın kendi içindeki özel bir metot (genellikle `GetInstance()`) üzerinden verilir.
+* **Gerçek Hayat Örneği:** Bir ülkenin sadece bir tane Cumhurbaşkanı vardır. Kim "Cumhurbaşkanı kim?" diye sorarsa sorsun, her zaman aynı kişi (aynı nesne) cevap verir; ikinci bir cumhurbaşkanı yaratılamaz.
+* **Yazılım Örneği:** Daha önce seninle konuştuğumuz **Logger** (hata kayıt) mekanizması veya veritabanı bağlantısı. Projede 50 farklı dosya aynı anda hata logu yazdırmak isteyebilir, ancak hepsi için ayrı ayrı `new Logger()` üretmek RAM'i gereksiz şişirir. Bunun yerine tek bir (Singleton) `Logger` nesnesi oluşturulur ve tüm sistem hataları o tek nesne üzerinden aynı dosyaya yazar.
+
+</details>
+
+<details>
+  <summary>Factory (Fabrika) Tasarım Deseni</summary>
+  
+* **Mantığı:** Hangi nesnenin üretileceğine, programın çalıştığı anda (run-time) gelen parametrelere veya ihtiyaçlara göre karar veren ve nesne üretme işini ana koddan ayırıp bir "Fabrika" sınıfına devreden desendir.
+* **Nasıl Uygulanır:** Üretilecek nesneler ortak bir Interface'den (Örn: `IFileReader`) türer. Kullanıcı (Client) nesnenin teknik olarak nasıl üretildiğini bilmez, sadece "Bana şu işi yapan bir araç ver" der ve fabrika ona uygun nesneyi üretip verir.
+* **Gerçek Hayat Örneği:** Bir araba fabrikasına gidip "Bana araba yap" demezsiniz, "Bana elektrikli bir SUV ver" dersiniz. Fabrika arka planda motorunu, lastiğini nasıl taktıysa takmıştır; siz sadece size verilen anahtarla arabayı (nesneyi) kullanırsınız.
+* **Yazılım Örneği:** Bize gelen dosyanın uzantısını kontrol eden bir fabrika düşün. Uzantı `.txt` ise fabrika arka planda `new TxtFileReader()` üretip yollar, `.docx` ise `new DocxFileReader()` üretir. Ana program `new` işlemleriyle kirlenmez, sadece fabrikadan doğru işçiyi talep eder.
+
+</details>
+
+<details>
+  <summary>Builder (İnşaatçı) Tasarım Deseni</summary>
+  
+* **Mantığı:** Çok fazla özelliğe (Property) sahip, karmaşık bir nesnenin üretim sürecini adım adım, parça parça ve okunabilir bir şekilde yapmayı sağlayan desendir.
+* **Nasıl Uygulanır:** Tek bir devasa `Constructor` (yapıcı metot) içine ne olduğu anlaşılmayan 15 tane parametre (örn: `new User("Ahmet", null, null, true, 24)`) göndermek yerine; `SetName()`, `SetAge()`, `Build()` gibi zincirleme metotlarla (Fluent Interface) nesne yavaş yavaş, adım adım inşa edilir.
+* **Gerçek Hayat Örneği:** Subway gibi bir sandviç dükkanına gittiğinde veya Vatan Bilgisayar'dan bilgisayar (Custom PC) toplarkenki süreci düşün. Önce ekmeği (kasayı) seçersin, sonra peyniri (RAM), sonra sosu (Ekran Kartı) eklersin ve en son "İşlemi tamamla (Build)" dersin. Süreç parça parçadır.
+* **Yazılım Örneği:** Bir e-posta (Email) nesnesi oluşturup göndermek istediğini düşün. Şöyle yazarsın: 
+`EmailBuilder.SetTo("ahmet@gmail.com").SetSubject("Rapor").AttachFile("rapor.pdf").Build();` 
+Kod hem satır satır İngilizce gibi okunabilir olur hem de son derece düzenli görünür.
+
+</details>
+
+#### Structrual
+
+<details>
+  <summary>Structural (Yapısal) Desenler Nedir?</summary>
+  
+* **Tanım:** Nesnelerin sıfırdan nasıl üretildiğiyle değil; zaten var olan nesnelerin ve sınıfların birbirleriyle nasıl uyumlu, esnek ve genişletilebilir bir şekilde birleştirileceğiyle ilgilenen tasarım desenleri grubudur.
+
+</details>
+
+<details>
+  <summary>Adapter (Adaptör) Tasarım Deseni</summary>
+  
+* **Mantığı:** Birbiriyle uyumsuz iki arayüzün (interface) beraber çalışmasını sağlar. Kodlarına müdahale edilemeyen dış sistemleri, kendi mevcut sisteminize uydurmak için araya konulan dönüştürücüdür.
+* **Gerçek Hayat Örneği:** Türkiye'den İngiltere'ye gidildiğinde, iki uçlu şarj aletini üç girişli prize takabilmek için araya "Priz Adaptörü" takılmasıdır. Ne telefon değişir ne de duvar yıkılır.
+* **Yazılım Örneği:** Projedeki tüm sistem `IFileReader` üzerinden `Read()` metodunu beklemektedir. Sisteme dışarıdan çok hızlı ama kodları değiştirilemeyen bir PDF kütüphanesi satın alınır. Bu kütüphanenin metodu `ExtractTextFromPdf()` şeklindedir. Doğrudan kullanmak yerine, araya bir `PdfAdapter` sınıfı yazılır. Sistem `Read()` komutu verdiğinde, adaptör arka planda bu komutu `ExtractTextFromPdf()` komutuna çevirerek iki uyumsuz yapıyı birleştirir.
+
+</details>
+
+<details>
+  <summary>Facade (Vitrin / Cephe) Tasarım Deseni</summary>
+  
+* **Mantığı:** Arka planda çalışan çok karmaşık, onlarca alt sistemden oluşan bir yapının önüne basit bir "Vitrin" koyarak ana programın (istemcinin) işini kolaylaştıran desendir. Karmaşıklığı gizler.
+* **Gerçek Hayat Örneği:** Arabayı çalıştırmak için sadece "Start" butonuna basılmasıdır. Arka planda ateşleme sistemi, yakıt pompası ve elektronik devrelerin çalışma sırasını sürücü bilmez; vitrin (buton) tüm bu karmaşık işleri sırasıyla kendi halleder.
+* **Yazılım Örneği:** Bir metin analiz işleminde sırasıyla; dosya doğrulama, byte çevirimi, noktalama temizliği, kelime sayımı ve loglama adımları gerekiyorsa, ana program (`Program.cs`) bu 5 adımı alt alta yazarak kirletilmez. Bunun yerine bir `AnalysisFacade` sınıfı oluşturulur ve içine `RunFullAnalysis()` adlı tek bir metot konur. Tüm o karmaşık adımlar bu metodun içinde çalışır. Ana program sadece tek bir metot çağırıp sonucu alır.
+
+</details>
+
+<details>
+  <summary>Decorator (Dekoratör / Süsleyici) Tasarım Deseni</summary>
+  
+* **Mantığı:** Sınıfların kaynak kodunu hiç değiştirmeden ve sürekli yeni alt sınıflar (sub-class) türetmeden, var olan bir nesneye dinamik (çalışma anında) olarak yeni özellikler veya davranışlar eklemeyi sağlayan desendir.
+* **Gerçek Hayat Örneği:** Kafeden alınan sade "Filtre Kahve"ye, müşteri istedikçe "Süt" veya "Karamel" eklenmesidir. Menüye yüzlerce yeni kahve çeşidi eklemek yerine, ana kahve nesnesi dışarıdan yeni malzemelerle süslenir.
+* **Yazılım Örneği:** Harika çalışan bir metin okuyucumuz (`TxtFileReader`) varken, "Okunan metinleri bazen şifrelememiz, bazen de İngilizceye çevirmemiz lazım"
+</details>
+
+#### Behaviroral
+
+<details>
+  <summary>Behavioral (Davranışsal) Desenler Nedir?</summary>
+  
+* **Tanım:** Nesnelerin nasıl yaratıldığıyla veya birleştirildiğiyle ilgilenmeyen; tamamen nesneler arasındaki iletişimin, görev dağılımının ve etkileşimin nasıl sağlanacağına odaklanan tasarım desenleri grubudur.
+
+</details>
+
+<details>
+  <summary>Strategy (Strateji) Tasarım Deseni</summary>
+  
+* **Mantığı:** Bir işlemi gerçekleştirmek için birden fazla yol (algoritma) olduğu durumlarda, bu yolların her birini ayrı sınıflara ayırarak program çalışırken (run-time) ihtiyaca göre aralarında esnek geçiş yapılmasını sağlayan desendir.
+* **Gerçek Hayat Örneği:** Havaalanına giderken zamana ve bütçeye göre "Taksi Stratejisi" veya "Otobüs Stratejisi" seçmektir. Hedef aynıdır ancak gidilen yol arka planda duruma göre değişir.
+* **Yazılım Örneği:** E-ticaret ödeme ekranında Kredi Kartı, Havale veya Kripto Para seçenekleri vardır. Tek bir metodun içine onlarca if-else yazmak yerine, `IOdemeStratejisi` arayüzünden türeyen `KrediKartiIleOde` ve `KriptoIleOde` sınıfları yazılır. Müşteri butona bastığında seçilen strateji devreye girer. Sisteme yarın Apple Pay eklendiğinde eski kodlara hiç dokunulmaz.
+
+</details>
+
+<details>
+  <summary>Observer (Gözlemci / Abonelik) Tasarım Deseni</summary>
+  
+* **Mantığı:** Bir nesnenin durumunda değişiklik olduğunda, onu takip eden (abone olan) diğer tüm nesnelerin bu değişiklikten otomatik olarak haberdar edilmesini (tetiklenmesini) sağlayan desendir.
+* **Gerçek Hayat Örneği:** Bir YouTube kanalına abone olunmasıdır. Kanal yeni video yüklediğinde izleyiciler sürekli kanalı kontrol etmez; YouTube sistemi tüm abonelere "Yeni video yüklendi" bildirimini otomatik atar.
+* **Yazılım Örneği:** Binance borsasında AVAX grafiğini izlerken, kullanıcı arayüzü (Frontend) sürekli sunucuya "Fiyat değişti mi?" diye sormaz. Arayüz, fiyat motoruna "Abone" (Observer) olur. Fiyat motoru (Subject) yeni veri aldığında, abone olan tüm ekranlara anında WebSocket üzerinden yeni fiyatı iter ve ekranlar saniyesinde kendini günceller.
+
+</details>
+
+<details>
+  <summary>Mediator (Arabulucu) Tasarım Deseni</summary>
+  
+* **Mantığı:** Birbirleriyle sürekli iletişim kurması gereken çok sayıda nesnenin, doğrudan birbiriyle konuşmasını yasaklayarak tüm iletişimi tek bir "Merkezi Arabulucu" üzerinden koordine eden desendir.
+* **Gerçek Hayat Örneği:** Hava Trafik Kontrol Kulesidir. Gökyüzündeki uçaklar çarpışmamak için birbirleriyle telsizle konuşmazlar; hepsi sadece kuleyle konuşur, kule (Mediator) uçakları kimin nereye ineceği konusunda koordine eder.
+* **Yazılım Örneği:** Karmaşık bir kayıt formunda "Ülke Seç", "Şehir Seç" kutuları ve "Kaydol" butonu vardır. Ülke değişince şehir sıfırlanmalıdır. Eğer bunlar birbirinin kodunu doğrudan çağırırsa sistem spagetti koda döner. Bunun yerine parçalar sadece `FormMediator` (Arabulucu) sınıfına "Ben değiştim" der. Arabulucu da diğer kutuya "Kendini sıfırla" talimatı verir. İletişim tek merkezden güvenle yönetilir.
+
+</details>
+
+### Yazılım Mimarileri
+
+
+<details>
+  <summary>Yazılım Mimarisi Nedir?</summary>
+  
+* **Tanım:** Bir yazılım sisteminin en üst düzeydeki yapısal planıdır. Projedeki modüllerin, veritabanının, kullanıcı arayüzünün ve harici servislerin birbirleriyle nasıl bir bağ kuracağını, veri trafiğinin hangi kurallara göre akacağını belirleyen şehir planı gibidir. Şehir planı hatalıysa, tek tek binaların (kodların) ne kadar güzel tasarlandığının bir önemi kalmaz.
+</details>
+
+#### Katmanlı Mimariler
+
+<details>
+  <summary>Katmanlı Mimari (Layered / N-Tier Architecture)</summary>
+  
+* **Mantığı:** Projeyi sorumluluklarına göre yukarıdan aşağıya katmanlara bölen en geleneksel mimari yapıdır. Geleneksel bir restoran mutfağı gibi çalışır: Müşteri Siparişi (Sunum/UI Katmanı) -> Şefin Yemek Tarifi (İş/Business Logic Katmanı) -> Kilerin Yönetimi (Veritabanı/Data Access Katmanı).
+* **Kuralı:** Her katman sadece bir altındaki katmanla konuşabilir. Doğrudan katman atlanamaz (Örn: Arayüz katmanı şefi atlayıp kilerden veri çekemez).
+* **Dezavantajı:** Katmanlar birbirine sıkı sıkıya bağlıdır. Veritabanı katmanında yapılacak bir değişiklik, yukarı doğru tüm iş kurallarını ve arayüz katmanını da doğrudan etkiler ve bakım maliyetini artırır.
+</details>
+
+<details>
+  <summary>Merkezcil Mimariler (Clean, Onion ve Hexagonal Architecture)</summary>
+  
+* **Mantığı:** Katmanlı mimarideki "herkesin veritabanına bağımlı olması" sorununu kökten çözen modern mimari felsefeleridir. Temel amaç, uygulamanın asıl beyni olan iş kurallarını (Domain/Business Logic) projenin tam merkezine koymak ve dış dünyadan tamamen izole etmektir.
+* **Uygulaması:** Bir otomobil motorunun çalışma prensibi gibidir. Motor merkezdedir; yakıtın benzin deposundan mı yoksa sonradan takılan bir LPG tankından mı geldiğini umursamaz. Motor sadece hortumdan gelecek saf yakıta (Arayüz/Interface) odaklanır.
+* **Avantajı:** Veritabanı (SQL/NoSQL), kullanıcı arayüzü (Web/Mobil) veya harici kütüphaneler projenin merkezindeki iş kurallarına dışarıdan birer aparat (eklenti) gibi bağlanır. Yarın bir gün veritabanı teknolojisi tamamen değişse bile projenin kalbi olan merkez kodlara tek satır dokunulmaz.
+</details>
+
+#### Davranışsal ve Olay Güdümlü Mimariler
+
+<details>
+  <summary>CQRS (Command Query Responsibility Segregation)</summary>
+  
+* **Mantığı:** Bir sistemdeki veri yazma/güncelleme (Command) işlemleri ile veri okuma (Query) işlemlerini hem kodsal olarak hem de performans gerekliyse veritabanı seviyesinde birbirinden tamamen ayıran mimari desendir.
+* **Örnek Senaryo:** Canlı bir kripto para borsasında saniyede milyonlarca kişi fiyat grafiğini ve tahtayı sadece **okur (Query)**. Ancak bir kullanıcı kaldıraçlı emir girdiğinde sisteme veri **yazar (Command)**.
+* **Çözüm:** Okuma boru hattı ile yazma boru hattı birbirinden ayrılır. Yazma işlemleri kuralları katı, güvenli bir SQL veritabanında yürütülürken; okuma işlemleri ana veritabanını yormamak adına şimşek hızındaki bir NoSQL (Örn: Redis) önbellek veritabanı üzerinden sunulur. Sistem kilitlenmeleri önlenir.
+</details>
+
+<details>
+  <summary>Event-Driven Architecture (Olay Güdümlü Mimari)</summary>
+  
+* **Mantığı:** Sistemdeki servislerin birbirlerini doğrudan isimleriyle çağırıp sıkı bağlar kurması yerine; ortaya fırlatılan bağımsız "Olaylara" (Event) tepki vererek asenkron (eşzamansız) çalıştığı mimari yapıdır.
+* **Örnek Senaryo:** Rekabetçi bir online oyunda gol atıldığı anı (`GoalScored` olayı) düşünün. Golü atan topun kodu, gidip tek tek skorbord servisini, stadyum ses efektlerini ve tekrar kamerası yazılımlarını doğrudan tetiklemez.
+* **Çözüm:** Top çizgiyi geçtiği an sadece havaya "GOL OLDU!" diye bir Event (olay mesajı) fırlatır. Skoru tutan servis, sesleri yöneten servis ve kamera servisi bu olayı arka planda dinlemektedir (Subscribe). Olay fırlatıldığı an her servis kendi üzerine düşen görevi bağımsızca başlatır. Servisler birbirini tanımaz, sistem maksimum esneklik kazanır.
+</details>
+
+#### Stratejik Tasarım ve Kod Kalitesi
+
+<details>
+  <summary>Domain Driven Design (DDD - Etki Alanı Odaklı Tasarım)</summary>
+  
+* **Mantığı:** Yazılım kodlarını ve sınıflarını yazılımcıların teknik jargona boğulmuş kelimelerine göre değil, o işi yapan şirketin gerçek hayattaki "İş Modeline" (Domain) göre tasarlama felsefesidir.
+* **Uygulaması:** Bir üniversite otomasyonunu yazarken tüm departmanlar için tek bir devasa `Ogrenci` sınıfı yaratılmaz. Sistem "Sınırlandırılmış Bağlamlara" (Bounded Context) bölünür. Kütüphane departmanı için öğrenci "kitap ödünç alan bir üye" iken; Muhasebe departmanı için öğrenci "harç ödeyen bir müşteridir". 
+* **Ortak Dil (Ubiquitous Language):** Kodun içinde `UpdateStatus(4)` gibi anlamsız ifadeler yerine, işletme uzmanlarının kendi arasında konuştuğu `SuspendStudent()` (Öğrenciyi Uzaklaştır) gibi fonksiyon isimleri tercih edilir. Yazılımcı ile iş analisti aynı dili konuşur.
+</details>
+
+<details>
+  <summary>Clean Code (Temiz Kod)</summary>
+  
+* **Mantığı:** Kodun sadece bilgisayarların çalıştırması için değil, projeye sonradan dahil olacak diğer insanların (veya 6 ay sonra kendinizin) kolayca okuyup anlayabilmesi için yazılması felsefesidir.
+* **Temel Kuralları:**
+  * **Anlamlı İsimlendirme:** Değişken isimleri gizemli olmamalıdır (`int d` yerine `int daysSinceCreation`).
+  * **Tek Sorumluluk:** Bir fonksiyon sadece tek bir küçük iş yapmalı ve ideal olarak 10-15 satırı geçmemelidir.
+  * **Sihirli Sayılardan Kaçınma:** Kodun ortasına doğrudan sayılar yazılmamalıdır (`if (status == 2)` yerine `if (status == OrderStatus.Shipped)`).
+  * **Yorum Satırı Azlığı:** Kodun kendisi o kadar temiz ve net olmalıdır ki, ne iş yaptığını anlatmak için ekstra yorum satırlarına (comment) ihtiyaç duymamalı, bir roman gibi yukarıdan aşağıya akıcı bir şekilde okunabilmelidir.
+</details>
+
+#### Clean Code: Temel Kurallar
+
+<details>
+  <summary>Anlamlı İsimlendirme (Meaningful Naming)</summary>
+  
+* **Mantığı:** Değişken, metot ve sınıf isimlerinin ne işe yaradığını, ne tür veriler tuttuğunu ve nasıl kullanıldığını başka hiçbir açıklamaya gerek kalmadan tek bakışta anlatabilmesi kuralıdır.
+* **Yazılım Örneği:** Kodun içinde `int d;` gibi gizemli isimler kullanmak yerine, `int elapsedDays;` gibi kendini açıklayan isimler kullanılır. Böylece 6 ay sonra o koda bakan biri o değişkenin ne tuttuğunu çözmek için hafiyelik yapmak zorunda kalmaz.
+
+</details>
+
+<details>
+  <summary>Küçük Fonksiyonlar (Small Functions)</summary>
+  
+* **Mantığı:** Bir metodun olabildiğince kısa, öz ve sadece kendi işine odaklanmış olması gerektiği kuralıdır. "Bir fonksiyon ne kadar küçükse o kadar iyidir" felsefesini savunur.
+* **Yazılım Örneği:** Kullanıcıyı kaydeden 100 satırlık tek bir `RegisterUser()` metodu yazmak yerine; kod `HashPassword()`, `SaveToDatabase()`, ve `SendEmail()` adında 3 küçük fonksiyona bölünür. Ana metot sadece bu isimleri sırayla çağırır.
+
+</details>
+
+<details>
+  <summary>Gereksiz Yorum Yazmama (Self-Documenting Code)</summary>
+  
+* **Mantığı:** Temiz kod, kendi kendini anlatan koddur. Yorum satırları (`//`) kodun ne yaptığını değil, **neden** o şekilde yapıldığını (iş kuralını veya istisnai bir durumu) açıklamak için kullanılmalıdır.
+* **Yazılım Örneği:** `// Kullanıcının yaşını kontrol et` yazıp altına `if (a > 18)` yazmak kötü kullanımdır. `a` yerine `userAge` yazılsaydı yoruma gerek kalmazdı. Ancak `// Hafta sonları borsa API'si kapalı olduğu için gecikme toleransı eklendi` gibi bir yorum, koddan anlaşılamayacak bir iş kuralını açıkladığı için değerlidir.
+
+</details>
+
+### Code Review ve Refactoring
+
+<details>
+  <summary>Code Review (Kod İncelemesi)</summary>
+  
+* **Mantığı:** Bir geliştiricinin yazdığı kodun, canlı sisteme (ana projeye) dahil edilmeden önce ekipteki diğer yazılımcılar tarafından gözden geçirilmesi sürecidir. "Dört göz, iki gözden iyidir" prensibine dayanır.
+* **Gerçek Hayat Örneği:** Bir yazarın kitabını matbaaya göndermeden önce bir editöre okutmasıdır. Kendi yazdığı koddaki hatalara karşı "işletme körlüğü" yaşayan yazılımcı, dışarıdan bakan taze bir göz sayesinde hatalarını erkenden fark eder.
+* **Nasıl Uygulanır:** GitHub gibi platformlarda "Pull Request" (PR) açılarak yapılır. Ekip arkadaşları koda satır satır yorum bırakır (Örn: "Burada Single Responsibility kuralını ihlal etmişiz", "Değişken ismini düzeltelim"). Onay (Approve) alınmadan kod ana sisteme birleştirilmez (Merge edilmez). Hataları canlıya çıkmadan yakalar ve kod kalitesini artırır.
+
+</details>
+
+<details>
+  <summary>Refactoring (Kod İyileştirme / Yeniden Yapılandırma)</summary>
+  
+* **Mantığı:** Kodun dışarıya sunduğu işlevi ve davranışları **kesinlikle değiştirmeden**, sadece iç yapısını daha temiz, daha okunabilir ve bakımı daha kolay hale getirme işlemidir.
+* **Gerçek Hayat Örneği:** Dağınık bir elbise dolabını düzenlemek gibidir. Dolaba yeni bir kıyafet eklenmez veya çıkarılmaz (Sisteme yeni özellik eklenmez). Sadece var olan kıyafetler (kodlar) daha düzenli bir şekilde katlanıp kategorize edilir.
+* **Nasıl Uygulanır:** Geçmişte aceleyle yazılmış ve spagettiye dönmüş 200 satırlık devasa bir metot; "Clean Code" ve "SOLID" prensipleri ışığında parçalanıp küçük fonksiyonlara bölünür. Kod tekrarları (DRY) temizlenir. Kullanıcı programı çalıştırdığında hiçbir fark hissetmez ancak arka plandaki kod mimarisi artık bir sanat eserine dönüşmüştür.
+
+</details>
