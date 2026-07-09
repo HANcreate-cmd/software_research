@@ -1404,3 +1404,88 @@ Kod hem satır satır İngilizce gibi okunabilir olur hem de son derece düzenli
 * **Nasıl Uygulanır:** Geçmişte aceleyle yazılmış ve spagettiye dönmüş 200 satırlık devasa bir metot; "Clean Code" ve "SOLID" prensipleri ışığında parçalanıp küçük fonksiyonlara bölünür. Kod tekrarları (DRY) temizlenir. Kullanıcı programı çalıştırdığında hiçbir fark hissetmez ancak arka plandaki kod mimarisi artık bir sanat eserine dönüşmüştür.
 
 </details>
+
+## 17.Authentication & Authorization
+
+<details>
+  <summary>JWT (JSON Web Token) Nedir?</summary>
+  
+* **Tanım:** Modern web uygulamalarında (özellikle REST API'lerde) istemci ile sunucu arasında kullanıcı kimlik doğrulaması ve veri transferi yapmak için kullanılan, şifrelenmiş, evrensel bir standarttır.
+* **Mantığı:** Bir festivale girişte alınan "VIP Bileklik" gibidir. Kullanıcı sisteme bir kez kullanıcı adı ve şifresiyle giriş yapar (Login). Sunucu doğrulamayı geçerse kullanıcıya bir JWT (Bileklik) verir. Kullanıcı sonraki tüm işlemlerinde şifre göndermek yerine sadece bu token'ı gönderir. Sunucu token'ı tanır ve işleme izin verir.
+* **Avantajı:** Sunucu "Stateless" (durumsuz) kalır, yani hafızasında (RAM) hangi kullanıcının aktif olduğunu tutmak zorunda kalmaz. Tüm yetki ve kimlik bilgileri token'ın içine paketlenmiştir, bu da devasa sunucu performans tasarrufu sağlar.
+
+</details>
+
+<details>
+  <summary>JWT Yapısı 1: Header (Başlık)</summary>
+  
+* **Mantığı:** Jetonun (Token) türünü ve güvenlik doğrulamasında hangi algoritmanın kullanıldığını belirten giriş kısmıdır.
+* **İçeriği:** Genellikle iki parçadan oluşur. Birincisi token'ın tipi (`"typ": "JWT"`), ikincisi ise imza kısmında kullanılan şifreleme algoritmasıdır (Örn: `"alg": "HS256"`).
+
+</details>
+
+<details>
+  <summary>JWT Yapısı 2: Payload (Gövde / Veriler)</summary>
+  
+* **Mantığı:** Kullanıcıya ait asıl bilgilerin (İsim, ID, Yetki/Rol) ve token'ın kurallarının (Örn: Ne zaman süresinin dolacağı - Expiration Time) bulunduğu ana kısımdır. Bu bilgilere **Claim** denir.
+* **Kritik Kural:** Payload kısmı sistem tarafından şifrelenmez (encrypt), sadece base64 formatına çevrilir (encode). Yani bu token'ı ele geçiren herkes bu kısmı kolayca okuyabilir. Bu nedenle Payload içine **asla şifre veya kredi kartı gibi gizli bilgiler konulmamalıdır.**
+
+</details>
+
+<details>
+  <summary>JWT Yapısı 3: Signature (İmza / Mühür)</summary>
+  
+* **Mantığı:** JWT'nin kalbidir ve değiştirilmesini (hacklenmesini) engelleyen güvenlik mührüdür. 
+* **Nasıl Çalışır:** Sunucu, token'ı oluştururken Header ve Payload kısımlarını alır, kendi bildiği ve kimsede olmayan gizli bir şifre (Secret Key) ile bunları harmanlayıp karmaşık bir matematiksel imza (Hash) üretir.
+* **Güvenlik Koruması:** Eğer araya giren bir hacker (veya kötü niyetli kullanıcı), Payload kısmındaki `"role": "user"` yazısını `"role": "admin"` olarak değiştirmeye kalkarsa; sunucuya gelen token'ın imzası ile sunucunun yeniden hesapladığı imza birbirini tutmaz. Sunucu anında token'ın değiştirildiğini (kurcalandığını) anlar ve erişimi reddeder (401 Unauthorized fırlatır).
+
+</details>
+
+### Kimlik ve Yetki Yönetimi 
+
+<details>
+  <summary>Authentication (Kimlik Doğrulama)</summary>
+  
+* **Mantığı:** Sisteme erişmek isteyen kişinin, gerçekten iddia ettiği kişi olup olmadığını ispatlama sürecidir. Sorduğu tek soru: **"Sen kimsin?"**
+* **Gerçek Hayat Örneği:** Havalimanındaki pasaport kontrol noktasıdır. Görevli sadece senin gerçekten o pasaporttaki kişi olup olmadığını doğrular.
+* **Yazılım Örneği:** Kullanıcının sisteme e-posta/şifre girmesi, parmak izi okutması veya iki aşamalı doğrulama (2FA) kodu girmesidir. Eğer sistem seni doğrulayamazsa içeriye adım atamazsın ve HTTP `401 Unauthorized` (Kimlik Doğrulanamadı) hatası fırlatılır.
+
+</details>
+
+<details>
+  <summary>Authorization (Yetkilendirme)</summary>
+  
+* **Mantığı:** Kimliği başarıyla doğrulanmış (sisteme girmiş) bir kullanıcının, içerideki hangi sayfalara, verilere veya işlemlere erişme hakkı olduğunu belirleme ve sınırlandırma sürecidir. Sorduğu soru: **"Bunu yapmaya iznin var mı?"**
+* **Gerçek Hayat Örneği:** Pasaport kontrolünü geçtikten sonra (Authentication başarılı), ekonomi sınıfı biletiyle "VIP Business Lounge" salonuna girmeye çalışmaktır. İçeridesinizdir, kim olduğunuz bilinir ama o özel alana girmeye **yetkiniz** yoktur.
+* **Yazılım Örneği:** Sisteme normal bir "Üye" olarak giriş yaptıktan sonra, URL kısmına `/admin/kullanicilari-sil` yazarak o sayfaya girmeye çalışmaktır. Sistem kim olduğunuzu bilir (Token'ınızı okur), ancak rolünüz "Admin" olmadığı için bu işlemi yapmanızı engeller. Bu durumda HTTP `403 Forbidden` (Erişim Reddedildi / Yasak) hatası fırlatılır.
+
+</details>
+
+### Modern Kimlik Doğrulama ve Yetkilendirme Standartları
+
+<details>
+  <summary>OAuth 2.0 (Open Authorization)</summary>
+  
+* **Mantığı:** Bir kullanıcının, kendi şifresini asla paylaşmadan, üçüncü parti bir uygulamaya (Örn: bir mobil oyun) farklı bir platformdaki (Örn: Google veya Facebook) verilerine erişme yetkisi vermesini sağlayan endüstri standardı bir yetkilendirme (Authorization) protokolüdür.
+* **Gerçek Hayat Örneği:** Arabanızı valeye verirken, torpidoyu ve bagajı açmayan, sadece arabayı park etmesine yarayan kısıtlı bir "Vale Anahtarı" vermektir.
+* **Yazılım Örneği:** Bir uygulamanın "Google Drive'ına dosya yüklemek istiyorum" talebine "İzin Ver" dediğinizde, o uygulama sizin Google şifrenizi asla öğrenmez. Sadece o işlemle sınırlı bir Access Token (Erişim Jetonu) alır.
+
+</details>
+
+<details>
+  <summary>OpenID Connect (OIDC)</summary>
+  
+* **Mantığı:** OAuth 2.0'ın sadece "yetkilendirme" yapabilme eksikliğini gideren, OAuth 2.0 üzerine inşa edilmiş bir kimlik doğrulama (Authentication) protokolüdür. Sisteme kullanıcının "kim olduğunu" söyler.
+* **Gerçek Hayat Örneği:** Vale anahtarının (OAuth) yanına eklenmiş, üzerinde fotoğrafınızın ve isminizin olduğu resmi bir kimlik kartıdır (ID Badge).
+* **Yazılım Örneği:** Web sitelerindeki "Google ile Giriş Yap" veya "Apple ile Giriş Yap" (SSO - Single Sign-On) butonlarının arkasındaki teknolojidir. Sistem sadece erişim izni almakla kalmaz, aynı zamanda Google'dan kim olduğunuzu kanıtlayan bir JWT (ID Token) alarak size otomatik profil oluşturur.
+
+</details>
+
+<details>
+  <summary>Refresh Token (Yenileme Jetonu)</summary>
+  
+* **Mantığı:** Güvenlik amacıyla ömrü çok kısa tutulan (Örn: 15 dakika) Access Token'ların (Erişim Jetonu) süresi dolduğunda; kullanıcıyı tekrar şifre girmeye zorlamadan, arka planda otomatik olarak yeni bir Access Token alınmasını sağlayan uzun ömürlü (Örn: 6 ay) özel bir jetondur.
+* **Gerçek Hayat Örneği:** Süresi dolan 1 saatlik lunapark biletini (Access Token) yenilemek için gişede baştan kimlik kontrolü (Login) yaptırmak yerine, cebinizdeki "VIP Üyelik Kartını" (Refresh Token) göstererek anında yeni bir bilet almaktır.
+* **Yazılım Örneği:** Telefonunuzdaki Instagram veya Twitter uygulamasına aylarca şifre girmemenizin sebebidir. Arka planda Access Token sürekli ölür, ancak uygulama Refresh Token'ı kullanarak siz hissetmeden sunucudan sürekli taze jetonlar alır. Şüpheli bir durum olursa sunucu Refresh Token'ı iptal eder ve sizden tekrar şifre ister.
+
+</details>
