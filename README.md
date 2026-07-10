@@ -1580,7 +1580,7 @@ Kod hem satır satır İngilizce gibi okunabilir olur hem de son derece düzenli
 <details>
   <summary>TLS (Transport Layer Security)</summary>
   
-* **Mantığı:** Emekliye ayrılan SSL'in yerini alan, onun güvenlik açıklarını kapatan ve çok daha güçlü şifreleme algoritmaları (kriptografi) kullanan güncel ve modern taşıma katmanı güvenliğidir.
+* **Mantığı:** Emekliye ayrılan SSL'in yerini alan, onun güvenlik açıklarını kapatan ve çok daha güçlü şif"releme algoritmaları (kriptografi) kullanan güncel ve modern taşıma katmanı güvenliğidir.
 * **Gerçek Hayat Örneği:** Eski kilitli çantanın yerine, kırılamayan titanyum şifreli ve parmak izi okuyuculu yeni nesil bir çanta kullanılmasıdır.
 * **Yazılım Örneği:** Bugün modern tarayıcıların tamamı veri şifrelemek için TLS 1.2 veya TLS 1.3 kullanır. İletişim başlamadan önce istemci ve sunucu arasında "TLS Handshake" (El Sıkışma) gerçekleşir, şifreleme yöntemleri üzerinde anlaşılır ve veri transferi ancak bu güvenli tünel kurulduktan sonra başlar.
 
@@ -1592,5 +1592,160 @@ Kod hem satır satır İngilizce gibi okunabilir olur hem de son derece düzenli
 * **Mantığı:** Web sitelerinin standart iletişim dili olan HTTP'nin, TLS (veya eski adıyla SSL) şifreleme katmanı üzerinden geçirilerek güvenli hale getirilmiş versiyonudur. (HTTPS = HTTP + TLS).
 * **Gerçek Hayat Örneği:** HTTP'yi standart bir nakliye kamyonu, TLS'i ise çelik zırh plakaları olarak düşünürsek; HTTPS bu ikisinin birleşimi olan "Zırhlı Para Taşıma Aracı"dır. 
 * **Yazılım Örneği:** Standart HTTP 80 portundan çalışır ve girilen şifreleri, kredi kartı numaralarını kablolar üzerinden okunabilir düz metin (Plaintext) olarak iletir. HTTPS ise 443 portundan çalışır ve veriyi anlamsız, çözülemez bir şifreli metne çevirerek iletir. Tarayıcılardaki "Kilit" simgesi sitenin HTTPS kullandığını gösterir.
+
+</details>
+
+## 19. Logging (Kayıt Tutma) ve Araçları
+
+<details>
+  <summary>Logging (Loglama) Nedir?</summary>
+  
+* **Mantığı:** Bir yazılımın çalışırken arka planda gerçekleştirdiği önemli işlemleri, uyarıları (Warning) ve hataları (Error/Exception) zaman damgasıyla (Timestamp) birlikte bir dosyaya, veritabanına veya konsola kaydetme işlemidir.
+* **Amacı:** Uygulama canlı ortama (Production) alındıktan sonra uçağın "Kara Kutusu" görevini görür. Bir çökme veya hata yaşandığında geliştiricilerin hatanın nerede, ne zaman ve hangi kullanıcının işleminde gerçekleştiğini bulmasını sağlar.
+* **Seviyeleri:** Genellikle önem derecesine göre ayrılır: `Trace` (Çok detaylı adım), `Debug` (Geliştirici notları), `Info` (Bilgi), `Warn` (Uyarı), `Error` (Hata), `Fatal` (Sistemi çökerten kritik hata).
+
+</details>
+
+<details>
+  <summary>Serilog (Structured / Yapısal Logging)</summary>
+  
+* **Mantığı:** Log verilerini sadece okunabilir düz bir metin (Flat Text) olarak değil, makine tarafından kolayca sorgulanabilir bir veri yapısı (Genellikle JSON) olarak tutan modern loglama kütüphanesidir.
+* **Gerçek Hayat Örneği:** Verileri bir deftere düz cümlelerle yazmak yerine, başlıkları belli olan bir Excel tablosuna sütun sütun kaydetmektir.
+* **Yazılım Örneği:** Düz loglama *"User123, 404 hatası aldı"* yazarken, Serilog bunu `{ "UserId": "User123", "ErrorCode": 404 }` formatında kaydeder. Elasticsearch veya Seq gibi araçlarla bu loglar üzerinde `ErrorCode == 404` şeklinde mükemmel filtrelemeler ve veri analizleri yapılabilir.
+
+</details>
+
+<details>
+  <summary>NLog (Geleneksel ve Yönlendirici)</summary>
+  
+* **Mantığı:** .NET ekosisteminin en köklü ve yapılandırılması en esnek loglama araçlarından biridir. Özellikle "Target" (Hedef) ve "Rule" (Kural) mantığıyla çok güçlü bir yönlendirme mekanizmasına sahiptir.
+* **Gerçek Hayat Örneği:** Bir posta ayrıştırma merkezidir. Postanın aciliyetine göre (Log seviyesi) onu kara yoluyla, hava yoluyla veya kuryeyle farklı hedeflere göndermesidir.
+* **Yazılım Örneği:** Merkezi bir `nlog.config` dosyası üzerinden şu kurallar çok kolay yazılabilir: "Info seviyesindeki logları sadece konsola yaz, Error seviyesindekileri metin dosyasına kaydet, Fatal (Ölümcül) bir hata olursa veritabanına yaz ve sistem yöneticisine e-posta gönder." Kodlara dokunmadan sadece config dosyasını değiştirerek sistemin loglama davranışı anında değiştirilebilir.
+
+</details>
+
+### Log Seviyeleri (Log Levels)
+
+<details>
+  <summary>Trace (İzleme / En İnce Detay)</summary>
+  
+* **Mantığı:** Sistemin attığı her adımı, değişkenlerin anlık durumlarını kaydeden mikroskop seviyesindeki logdur. Aşırı disk alanı kapladığı için sadece çok kritik hataları ararken anlık olarak açılır.
+* **Örnek:** `"For döngüsünün 15. adımına girildi, i değişkeninin güncel değeri: 5"`
+
+</details>
+
+<details>
+  <summary>Debug (Hata Ayıklama)</summary>
+  
+* **Mantığı:** Sadece geliştirme (Development) sürecinde yazılımcıların uygulamanın iç akışını kontrol etmek için kullandığı, son kullanıcıyı ilgilendirmeyen teknik loglardır.
+* **Örnek:** `"SQL sorgusu çalıştırıldı, 50 satır veri çekilip belleğe (Cache) eklendi."`
+
+</details>
+
+<details>
+  <summary>Information (Bilgi)</summary>
+  
+* **Mantığı:** Uygulamanın normal iş akışının (Business Logic) sorunsuz bir şekilde ilerlediğini gösteren durum bildirimleridir.
+* **Örnek:** `"Kullanıcı sisteme giriş yaptı."` veya `"Sipariş ödemesi başarıyla alındı."`
+
+</details>
+
+<details>
+  <summary>Warning (Uyarı)</summary>
+  
+* **Mantığı:** Sistem çalışmaya devam ediyor ve işlemi tamamlıyor; ancak ortada beklenmedik, olağandışı veya ileride hataya dönüşebilecek bir durum var demektir. 
+* **Örnek:** `"Kullanıcı profili fotoğrafsız kaydedildi (Varsayılan atandı)."` veya `"Harici API çok yavaş yanıt veriyor (Gecikme: 3sn)."`
+
+</details>
+
+<details>
+  <summary>Error (Hata)</summary>
+  
+* **Mantığı:** Belirli bir kullanıcının veya sürecin işlemi (Request) tamamlayamadığını, uygulamanın bir yerinde kırılma yaşandığını belirtir. Ancak sistemin geneli çalışmaya devam eder, uygulama tamamen çökmez.
+* **Örnek:** `"PDF dosyası oluşturulurken NullReferenceException alındı, dosya oluşturulamadı."`
+
+</details>
+
+<details>
+  <summary>Critical / Fatal (Kritik / Ölümcül)</summary>
+  
+* **Mantığı:** Uygulamanın bütünlüğünü bozan, tamamen çökmesine (Crash) neden olan veya temel hizmetlerin durmasına yol açan en üst düzey acil durum logudur. Genelde sistem yöneticilerini otomatik olarak uyaracak alarmlara bağlanır.
+* **Örnek:** `"Veritabanı bağlantısı tamamen koptu, hiçbir işlem yapılamıyor!"` veya `"Sunucu belleği (RAM) tamamen doldu (Out Of Memory)."`
+
+</details>
+
+### Hata Yönetimi (Exception Handling) ve Test Süreçleri
+
+<details>
+  <summary>Global Exception Handling (Küresel Hata Yönetimi)</summary>
+  
+* **Mantığı:** Kodun her köşesine `try-catch` blokları yazarak kod kirliliği yaratmak yerine, uygulamanın en tepesine tüm hataları yakalayacak merkezi bir ağ (sistem) kurma stratejisidir.
+* **Gerçek Hayat Örneği:** Hastanenin her odasına yangın tüpü koyup nöbet tutmak yerine, tüm binayı kapsayan merkezi bir duman dedektörü ve otomatik söndürme sistemi kurmaktır.
+* **Yazılım Örneği:** Projenin neresinde, hangi katmanında hata çıkarsa çıksın (veritabanı çökmesi, yanlış parametre, eksik dosya) sistem bu hatayı otomatik olarak merkezi yönetim birimine düşürür, orada loglar ve sürecin güvenle sonlanmasını sağlar.
+
+</details>
+
+<details>
+  <summary>Exception Middleware (Hata Ara Katmanı)</summary>
+  
+* **Mantığı:** Global Exception stratejisini uyguladığımız somut yapıdır. HTTP istek (Request) ve cevap (Response) hattının arasına yerleştirilen, sadece patlayan hataları yakalamakla görevli filtredir.
+* **Gerçek Hayat Örneği:** Mutfakta yemeği yakan şefin (Backend) bu yanık yemeği doğrudan müşteriye (Kullanıcıya) sunmasını engelleyen; araya girip durumu toparlayan, kibarca özür dileyip başka bir şey ikram eden Şef Garsondur.
+* **Yazılım Örneği:** Sistemde kritik bir hata oluştuğunda, Middleware araya girer. Sunucunun çökmesini engeller, kırmızı hata satırlarını (Stack Trace) gizler ve son kullanıcıya sadece "İşleminiz şu an gerçekleştirilemiyor (HTTP 500)" gibi temiz ve güvenli bir mesaj döndürür.
+
+</details>
+
+<details>
+  <summary>ProblemDetails Standardı</summary>
+  
+* **Mantığı:** HTTP API'lerinde oluşan hataların istemciye (Frontend/Mobil) hangi JSON formatında gönderileceğini belirleyen evrensel bir standarttır (RFC 7807).
+* **Gerçek Hayat Örneği:** Dünyanın her yerindeki doktorların hastanın durumunu yazarken kullandığı evrensel kan tahlili raporu formatıdır. Standart alanlar içerdiği için herkes tarafından anlaşılır.
+* **Yazılım Örneği:** Hata fırladığında karmaşık yanıtlar yerine evrensel bir JSON döner: `type` (Hatanın referans linki), `title` (Hata adı), `status` (HTTP kodu, örn: 400), ve `detail` (Hataya dair açıklama). Bu sayede frontend geliştiricisi gelen hatayı parse ederken (okurken) sürpriz yaşamaz.
+
+</details>
+
+<details>
+  <summary>Unit Test (Birim Testi)</summary>
+  
+* **Mantığı:** Yazılımın tamamını bir bütün olarak değil; sınıfları ve metotları (fonksiyonları) tek tek, dış bağımlılıklardan (Veritabanı, API, Dosya sistemi) tamamen izole ederek test etme işlemidir.
+* **Gerçek Hayat Örneği:** Bir otomobili baştan aşağı üretip yolda test etmek yerine; sadece bujiyi veya sadece fren balatasını bir test tezgahına bağlayıp kendi görevini doğru yapıp yapmadığını ölçmektir.
+* **Yazılım Örneği:** `IndirimUygula(fiyat, yuzde)` metodunu test etmek için veritabanına bağlanılmaz. Test kodunda "Fiyat 100, yüzde 20 verilirse sonuç 80 dönmelidir" kuralı (Assert) yazılır. Metot çalıştırılır, sonuç 80 gelirse test yeşil (Pass), farklı gelirse kırmızı (Fail) olur. Projedeki mantık hatalarını (Bug) canlıya çıkmadan yakalar.
+
+</details>
+
+### İleri Seviye Test Stratejileri ve Araçları
+
+<details>
+  <summary>Integration Test (Entegrasyon Testi)</summary>
+  
+* **Mantığı:** Tek başına sorunsuz çalışan yazılım birimlerinin (fonksiyonlar, sınıflar), veritabanı, dosya sistemi veya dış API'ler gibi diğer bileşenlerle **bir araya geldiğinde** doğru iletişim kurup kuramadığını ölçen testlerdir.
+* **Gerçek Hayat Örneği:** Buji ve benzin pompasını ayrı ayrı test ettikten sonra, ikisini aynı motora takıp kontağı çevirdiğinizde motorun sorunsuz çalışıp çalışmadığını kontrol etmektir.
+* **Yazılım Örneği:** Bir kodun, sistemdeki gerçek bir SQL veritabanına bağlanıp ilgili tabloya yeni bir kayıt atıp atamadığını test etmektir. Dış sistemlerle iletişim kurduğu için Unit Testlere göre çok daha yavaştır.
+
+</details>
+
+<details>
+  <summary>Mocking (Dublör Kullanma / Taklit Etme)</summary>
+  
+* **Mantığı:** Unit Test yazarken, test edilen metodun dış dünyayla (Veritabanı, API, E-posta sunucusu) olan gerçek bağlantılarını koparıp, onların yerine sizin kontrolünüzde olan sahte (Fake/Mock) nesneler yerleştirme işlemidir.
+* **Gerçek Hayat Örneği:** Arabanın güvenlik testini yaparken koltuğa gerçek bir insan oturtup duvara çarpmak yerine, her tepkisini ölçebildiğiniz sensörlü bir "Çarpışma Test Mankeni (Dublör)" oturtmaktır.
+* **Yazılım Örneği:** Ödeme alan bir metodu test ederken, gerçekten bankaya bağlanıp para çekmemek için araya "Sahte Bir Banka Servisi" (Mock) koyarsınız. Bu sahte servise "Benim kodum seni çağırdığında ona her zaman *Bakiye Yetersiz* cevabını dön" komutunu verir ve kodunuzun bu olumsuz senaryoda çöküp çökmeyeceğini internetsiz test edersiniz.
+
+</details>
+
+<details>
+  <summary>Mocking Araçları: Moq ve NSubstitute</summary>
+  
+* **Moq:** .NET ekosisteminin en eski ve en yaygın "Dublör yaratma" kütüphanesidir. Sahte nesnelerin davranışlarını belirlemek için `.Setup()` metotlarını ve lambda ifadelerini (özellikle `It.IsAny<T>()` gibi kuralları) kullanır. Biraz daha katı ve kuralcı bir sözdizimine (Syntax) sahiptir.
+* **NSubstitute:** Moq'un karmaşık sözdizimine tepki olarak doğmuş, günümüzün çok popüler, modern ve akıcı (fluent) dublör kütüphanesidir. Karmaşık `Setup` kelimeleri yerine doğrudan İngilizce cümle kurar gibi `fakeServis.VeriGetir().Returns("Test Verisi");` şeklinde kod yazmanıza olanak tanır. Clean Code'a daha uygundur.
+
+</details>
+
+<details>
+  <summary>Test Pyramid (Test Piramidi)</summary>
+  
+* **Mantığı:** Bir projede hangi test türünden ne kadar yazılması gerektiğini, testlerin hız ve maliyetlerine göre kategorize eden hiyerarşik bir modeldir.
+* **Taban (Unit Tests - Birim Testleri):** Piramidin en geniş kısmıdır. En ucuz, en hızlı (milisaniyeler süren) testlerdir. Sistemin temel taşlarını test ettiği için sayıca en fazla (Binlerce) bunlar olmalıdır.
+* **Orta (Integration Tests - Entegrasyon Testleri):** Dış sistemlere (Veritabanı/API) bağlandıkları için daha yavaştırlar. Bu nedenle sayıca Unit Testlerden daha az (Yüzlerce) olmalıdırlar.
+* **Zirve (E2E / UI Tests - Uçtan Uca Testler):** Projeyi tamamen ayağa kaldırıp ekrandaki butonlara tıklayarak yapılan testlerdir. Çok kırılgandırlar (Ekrandaki buton yeri değişse test patlar) ve çok yavaş çalışırlar. Bu yüzden piramidin tepesinde çok az sayıda (Onlarca) tutulmalıdırlar.
 
 </details>
