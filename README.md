@@ -1749,3 +1749,109 @@ Kod hem satır satır İngilizce gibi okunabilir olur hem de son derece düzenli
 * **Zirve (E2E / UI Tests - Uçtan Uca Testler):** Projeyi tamamen ayağa kaldırıp ekrandaki butonlara tıklayarak yapılan testlerdir. Çok kırılgandırlar (Ekrandaki buton yeri değişse test patlar) ve çok yavaş çalışırlar. Bu yüzden piramidin tepesinde çok az sayıda (Onlarca) tutulmalıdırlar.
 
 </details>
+
+## 20. Performans ve Ölçeklendirme (Caching / Önbellekleme)
+
+<details>
+  <summary>Caching (Önbelleğe Alma) Nedir?</summary>
+  
+* **Mantığı:** Sürekli okunan, sık değişmeyen ve hesaplanması/çekilmesi maliyetli olan verileri, yavaş disklerdeki ana veritabanı (SQL) yerine; milisaniyeler içinde yanıt verebilen bilgisayar belleğine (RAM) geçici olarak kaydetme işlemidir.
+* **Gerçek Hayat Örneği:** Bir kelimenin anlamını bulmak için her defasında devasa kütüphaneye gidip kalın bir sözlükte (Veritabanı) sayfa çevirmek yerine; o kelimeyi küçük bir post-it kağıdına yazıp bilgisayar ekranının köşesine yapıştırmaktır (Cache).
+* **Yazılım Örneği:** Bir e-ticaret sitesindeki "Kategoriler" menüsü günde belki 1 kere değişir ama saniyede binlerce kişi tarafından görüntülenir. Bunu her seferinde veritabanından çekmek sunucuyu boğar. Bunun yerine veriler 1 kere çekilip Cache'e (Önbelleğe) alınır, binlerce kişiye RAM üzerinden sıfır maliyetle anında gösterilir.
+
+</details>
+
+<details>
+  <summary>In-Memory Cache (Bellek İçi Önbellek)</summary>
+  
+* **Mantığı:** Verilerin doğrudan uygulamanın (Örn: Web API) çalıştığı kendi sunucusunun RAM'inde tutulmasıdır.
+* **Avantajı ve Dezavantajı:** Araya hiçbir ağ kablosu girmediği için dünyadaki en hızlı okuma yöntemidir. Ancak, sistem büyüyüp birden fazla sunucuya (Load Balancer ile) yayıldığında sorun yaratır. Sunucu A'nın RAM'indeki veriyi Sunucu B bilemez. Ayrıca uygulama yeniden başlatıldığında (Restart) veya sunucu çöktüğünde RAM'deki tüm önbellek silinir.
+
+</details>
+
+<details>
+  <summary>Distributed Cache (Dağıtık Önbellek)</summary>
+  
+* **Mantığı:** Önbellek verilerinin, uygulamanın çalıştığı sunucuların kendi içinde değil; ağ üzerindeki tamamen bağımsız, merkezi bir önbellek sunucusunda tutulması mimarisidir.
+* **Gerçek Hayat Örneği:** Çalışanların kendi masalarına not yapıştırması (In-Memory) yerine, ofisin tam ortasına herkesin bakıp okuyabileceği ortak bir beyaz tahta kurulmasıdır.
+* **Avantajı:** Web sunucularından biri çökse bile önbellek verisi güvendedir. Tüm sunucular (Sunucu A, B ve C) her zaman aynı merkezi önbelleğe bakar, böylece veri tutarsızlığı yaşanmaz. Sistemleri yatayda büyütmek (Scale Out) çok kolaylaşır.
+
+</details>
+
+<details>
+  <summary>Redis (Açık Kaynak Dağıtık Önbellek Aracı)</summary>
+  
+* **Mantığı:** Dağıtık önbellek (Distributed Cache) mimarisini kurmak için endüstri standardı haline gelmiş, verileri diskte değil doğrudan RAM üzerinde "Key-Value" (Anahtar-Değer) formatında saklayan süper hızlı bir NoSQL veri deposudur.
+* **Kullanım Alanı Örneği:** Milyonlarca kişinin anlık işlem yaptığı bir borsada fiyat tahtasını göstermek için her milisaniye ağır SQL sorguları atılamaz. Son fiyat sürekli olarak Redis'e yazılır. Milyonlarca istemci bu güncel fiyatı, disk okuma maliyeti olmadan şimşek hızında Redis'in RAM'i üzerinden çeker.
+* **Ekstra Özellikleri:** Sadece önbellek için değil; Pub/Sub (anlık mesajlaşma), Listeler ve Sıralı Kümeler (Oyunlardaki canlı skor/liderlik tabloları) gibi karmaşık veri yapılarını RAM hızında yönetmek için de eşsiz bir araçtır.
+
+</details>
+
+### Asenkron Programlama (Async / Await)
+
+<details>
+  <summary>Asenkron Programlama Nedir?</summary>
+  
+* **Mantığı:** Ağ istekleri, dosya okuma/yazma veya veritabanı sorguları gibi uzun süren işlemleri başlatıp, sonucun gelmesini ana akışı (Main Thread) durdurarak (bloklayarak) beklemek yerine; o bekleme süresinde uygulamanın farklı işlemleri yapmaya devam etmesini sağlayan mimaridir.
+* **Gerçek Hayat Örneği:** Makarna suyu ocağa koyulduğunda, su kaynayana kadar ocağın başında 15 dakika put gibi beklemek **Senkron (Bloklayan)** bir işlemdir. Suyu ocağa koyup, o kaynarken bir yandan salata yapmak ve mailleri kontrol etmek ise **Asenkron (Bloklamayan)** bir işlemdir.
+* **Yazılım Örneği:** Masaüstü veya mobil bir uygulamada "İndir" butonuna bastığınızda uygulamanın tamamen donması ve pencerenin sürüklenememesi, işlemin Senkron yapılmasından kaynaklanır. Asenkron yapıda ise dosya arka planda inerken kullanıcı uygulamayı rahatça kullanmaya devam eder. Sunucu tarafında (Web API) ise, asenkron mimari tek bir sunucunun aynı anda on binlerce kullanıcıya çökmeden yanıt verebilmesini sağlar.
+
+</details>
+
+<details>
+  <summary>async / await Anahtar Kelimeleri</summary>
+  
+* **Mantığı:** Asenkron kodların karmaşık iş parçacığı (Thread) yönetimlerine girmeden, sanki normal (senkron) bir kodmuş gibi yukarıdan aşağıya temiz ve okunabilir bir şekilde yazılmasını sağlayan modern sözdizimi araçlarıdır.
+* **Gerçek Hayat Örneği:** `async`, bir restorandaki garsonun "Ben aynı anda çok masaya bakabilirim" yeteneğidir. `await` ise garsonun mutfağa siparişi verdikten sonra "Bu yemeğin pişmesini bekliyorum (await), pişince bana haber ver, o sırada ben gidip diğer masalara bakayım" diyerek bekleme süresini verimli kullanmasıdır.
+* **Yazılım Örneği:** C# dilinde asenkron bir metot tanımlamak için imzanın başına `async` yazılır ve dönüş tipi genelde `Task` olur. Metodun içindeki uzun sürecek I/O (Girdi/Çıktı) işleminin başına ise `await` konulur (Örn: `await _context.Users.ToListAsync()`). Program `await` satırına geldiğinde ilgili işlem arka planda çalışmaya başlar, ana iş parçacığı serbest kalır ve işlem tamamlandığında kod kaldığı satırdan çalışmaya devam eder.
+
+</details>
+
+### Arka Plan İşleri (Background Jobs) ve Zamanlayıcılar
+
+<details>
+  <summary>Background Jobs Nedir?</summary>
+  
+* **Mantığı:** Ana uygulamanın yanıt verme süresini (performansını) etkilememesi gereken, uzun süren veya belirli zamanlarda periyodik olarak çalışması gereken ağır işlemlerin ana akıştan koparılıp arka planda bir kuyruğa (Queue) atılması mimarisidir.
+* **Farkı:** `async/await` anlık asenkronluk sağlar, ancak sunucu yeniden başlatılırsa devam eden `async` işlemler kaybolur. Background Jobs kütüphaneleri ise bu görevleri veritabanına kaydeder (Kalıcılık/Persistence). Sunucu çökse dahi, tekrar ayağa kalktığında yarım kalan işler kaldığı yerden devam eder.
+* **Yazılım Örneği:** Sisteme yüklenen ağır bir videonun işlenmesi, binlerce kullanıcıya aynı anda promosyon e-postası gönderilmesi veya her gece saat 03:00'te veritabanındaki "Silinmiş" işaretli kayıtların gerçekten temizlenmesi (Cleanup) işlemleridir.
+
+</details>
+
+<details>
+  <summary>Hangfire (Modern ve Görsel)</summary>
+  
+* **Mantığı:** .NET ekosisteminde kurulumu en kolay olan, işleri SQL Server, Redis gibi veritabanlarında güvenle saklayan ve entegre bir yönetim paneli (Dashboard) ile birlikte gelen arka plan görev yöneticisidir.
+* **Gerçek Hayat Örneği:** Mutfaktaki siparişlerin, hazırlananların ve yananların anlık olarak takip edilebildiği, aşçıbaşının müdahale edebildiği akıllı dijital sipariş ekranıdır.
+* **Özellikleri:** "Ateşle ve Unut" (Anında çalıştır), "Gecikmeli" (Örn: 2 gün sonra çalıştır) ve "Tekrarlı" (Örn: Her saat başı çalıştır) olmak üzere 3 temel iş türünü tek satır kodla yönetir. Geliştiriciler tarayıcı üzerinden Hangfire paneline girip hata veren işleri (Failed) görebilir ve tek tuşla yeniden başlatabilir (Retry).
+
+</details>
+
+<details>
+  <summary>Quartz (.NET - Geleneksel ve Detaylı)</summary>
+  
+* **Mantığı:** Kurumsal dünyada çok uzun yıllardır kullanılan, zamanlama (Scheduling) konusunda inanılmaz detaylı ve katı kurallar yazılabilmesini sağlayan, iş (Job) ve tetikleyici (Trigger) mekanizmasını tamamen birbirinden ayıran güçlü bir motordur.
+* **Gerçek Hayat Örneği:** Bir fabrikanın, resmi tatilleri, hafta sonlarını ve özel günleri hesaplayarak makinelerin ne zaman çalışacağına milisaniye şaşmadan karar veren son derece katı ve kuralcı vardiya amiridir.
+* **Özellikleri:** Hazır bir kullanıcı arayüzü (UI) yoktur, daha çok arka planda sessiz bir bekçi gibi çalışır. "Cron Expressions" (Örn: Ayın son Cuma günü saat 17:30) gibi çok karmaşık zamanlama algoritmalarını kusursuz destekler. Bankacılık ve finans gibi takvim doğruluğunun kritik olduğu projelerin vazgeçilmezidir.
+
+</details>
+
+### Optimizasyon ve API Savunma Stratejileri
+
+<details>
+  <summary>Pagination (Sayfalama)</summary>
+  
+* **Mantığı:** Büyük veri setlerini (Örn: binlerce ürün, kullanıcı veya log kaydı) tek bir yanıtta (Response) istemciye göndererek sistemi boğmak yerine, verileri belirli boyutlardaki parçalara (sayfalara) bölerek kademeli olarak sunma işlemidir.
+* **Gerçek Hayat Örneği:** 1000 sayfalık bir içeriği metrelerce uzunlukta tek bir parşömen kağıdına yazmak yerine, sayfalandırılmış bir kitap haline getirmektir.
+* **Yazılım Örneği:** E-ticaret sitelerinde arama yapıldığında 50.000 sonucun tamamı ekrana basılmaz. İstemci, sunucuya `?pageNumber=1&pageSize=20` (1. sayfa, 20 kayıt) şeklinde parametre yollar. Veritabanı sorgusu bu parametrelere göre `Skip(0).Take(20)` mantığıyla çalışır. Ağ trafiği (Bandwidth) ve sunucu RAM'i inanılmaz derecede tasarruf eder, arayüz şimşek hızında yüklenir.
+
+</details>
+
+<details>
+  <summary>Rate Limiting (Hız / İstek Sınırlandırma)</summary>
+  
+* **Mantığı:** Bir API'ye veya web sunucusuna tek bir kullanıcı (IP adresi, API Anahtarı vb.) tarafından belirli bir zaman diliminde yapılabilecek maksimum istek sayısını kısıtlayan bir güvenlik ve stabilite mekanizmasıdır.
+* **Gerçek Hayat Örneği:** Açık büfe bir restoranda aşçının, diğer müşteriler aç kalmasın diye bir kişinin 5 dakika içinde sadece 2 tabak yemek almasına izin vermesidir. Üçüncü tabağı isteyen müşteriye "Biraz beklemen gerekiyor" denilir.
+* **Yazılım Örneği:** Sunucunun "Dakikada maksimum 60 istek" kuralıyla korunmasıdır. Kötü niyetli bir bot sistemi çökertmek (DDoS) veya şifre denemek (Brute Force) için saniyede binlerce istek attığında; sistem kotanın dolduğunu fark eder ve gelen isteklere işlem yapmadan doğrudan **HTTP 429 (Too Many Requests)** hata kodunu döndürür. Bu sayede ana veritabanı yorulmaz ve gerçek kullanıcılar sistemi sorunsuz kullanmaya devam eder.
+
+</details>
