@@ -1855,3 +1855,83 @@ Kod hem satır satır İngilizce gibi okunabilir olur hem de son derece düzenli
 * **Yazılım Örneği:** Sunucunun "Dakikada maksimum 60 istek" kuralıyla korunmasıdır. Kötü niyetli bir bot sistemi çökertmek (DDoS) veya şifre denemek (Brute Force) için saniyede binlerce istek attığında; sistem kotanın dolduğunu fark eder ve gelen isteklere işlem yapmadan doğrudan **HTTP 429 (Too Many Requests)** hata kodunu döndürür. Bu sayede ana veritabanı yorulmaz ve gerçek kullanıcılar sistemi sorunsuz kullanmaya devam eder.
 
 </details>
+
+## 21. ABP Framework ve Kurumsal Uygulama Mimarisi
+
+<details>
+  <summary>ABP Framework Nedir?</summary>
+  
+* **Tanım:** ASP.NET Core üzerinde çalışan, modern web uygulamaları ve mikroservisler geliştirmek için standartlar belirleyen (Domain Driven Design vb.) çok kapsamlı ve açık kaynaklı bir kurumsal uygulama altyapısıdır (Framework).
+* **Amacı:** Geliştiricileri loglama, yetkilendirme, çoklu dil (localization), exception handling gibi tekrar eden altyapı kodlarını (Boilerplate) yazmaktan kurtararak doğrudan iş kurallarına (Business Logic) odaklanmalarını sağlamaktır.
+
+</details>
+
+<details>
+  <summary>Multi Tenancy (Çok Kiracılılık)</summary>
+  
+* **Mantığı:** Tek bir uygulamanın (kodun ve veritabanının), birden fazla bağımsız kurumsal müşteriye (Kiracı/Tenant) aynı anda hizmet verebilmesi mimarisidir.
+* **Gerçek Hayat Örneği:** Aynı AVM altyapısını kullanan mağazaların birbirlerinin içini görememesi gibidir.
+* **Yazılım Örneği:** SaaS (Software as a Service) projelerinde (Örn: Muhasebe uygulaması) A şirketi giriş yaptığında sistem otomatik olarak `TenantId = A` filtresini uygular. A şirketi sadece kendi faturalarını görür. ABP bu filtrelemeyi veritabanı seviyesinde otomatik yapar, geliştirici ekstra `Where(x => x.TenantId == ...)` kodu yazmak zorunda kalmaz.
+
+</details>
+
+<details>
+  <summary>Audit Logging (Denetim Kayıtları)</summary>
+  
+* **Mantığı:** Sistemde yapılan her kritik değişikliğin (Veri ekleme, silme, güncelleme) kimin tarafından, hangi saatte ve hangi IP'den yapıldığını otomatik kaydeden tescil mekanizmasıdır.
+* **Gerçek Hayat Örneği:** Yüksek güvenlikli bir banka kasasına giriş çıkışların ve alınan dosyaların kameralarla ve defterle saniyesi saniyesine kayıt altına alınmasıdır.
+* **Yazılım Örneği:** Veritabanındaki bir ürünün fiyatı 100'den 500'e çıktığında; ABP arkada otomatik bir tabloya *"Kullanıcı X, Ürünler tablosundaki 15 ID'li kaydın Fiyat propertysini 100'den 500'e değiştirdi"* bilgisini yazar. Kurumsal güvenlik ve geriye dönük hesap verebilirlik sağlar.
+
+</details>
+
+<details>
+  <summary>Event Bus (Olay Veriyolu) ve Modular Architecture</summary>
+  
+* **Modular Architecture (Modüler Mimari):** Sistemin tek bir dev blok (Monolith) yerine, tak-çıkar mantığıyla çalışan bağımsız modüllerden (Blog, Ödeme, Sepet modülleri) oluşmasıdır. Lego parçaları gibi birleştirilir veya sökülürler.
+* **Event Bus (Olay Veriyolu):** Bu bağımsız modüllerin birbirlerini doğrudan çağırmadan asenkron haberleşmesini sağlayan sistemdir. Bir radyo yayını gibidir.
+* **Yazılım Örneği:** `KullaniciModülü`, yeni kayıt gelince `KullaniciKaydoldu` olayını (Event) yayınlar. `MailModülü` bu yayını dinliyordur (Subscribe), hemen hoş geldin maili atar. Modüller birbirinin kodunu bilmez (Loose Coupling - Gevşek Bağlılık).
+
+</details>
+
+<details>
+  <summary>Dependency Injection (Bağımlılık Enjeksiyonu)</summary>
+  
+* **Mantığı:** Bir sınıfın (Class) ihtiyaç duyduğu diğer araçları (Bağımlılıkları) kendi içinde `new` anahtar kelimesiyle üretmek yerine, dışarıdan (bir konteyner tarafından) kendisine hazır olarak verilmesidir.
+* **Gerçek Hayat Örneği:** Cerrahın ameliyatta kullanacağı aletleri kendisinin üretmesi yerine, hemşirenin (DI Container) ona anlık olarak doğru aleti uzatmasıdır.
+* **Yazılım Örneği:** ABP'de sınıfların yapıcı metotlarına (Constructor) sadece ihtiyaç duyulan arayüzler (Interface) yazılır. Uygulama ayağa kalkarken ABP, hangi sınıfa hangi aracın verileceğini otomatik yönetir, bellek kullanımını optimize eder ve birim testlerinin (Unit Test) dublörlerle (Mock) kolayca yapılmasını sağlar.
+
+</details>
+
+
+
+<details>
+  <summary>ERP Sistemleri (Kurumsal Kaynak Planlaması)</summary>
+  
+* **Mantığı:** Bir kurumun stok, üretim, insan kaynakları, satın alma gibi tüm departmanlarını ve iş süreçlerini tek bir entegre veri tabanında yöneten devasa sistemlerdir.
+* **ABP Avantajı:** ERP projeleri doğası gereği aşırı büyüktür. ABP'nin **Modular Architecture** desteği sayesinde projenin her departmanı (Örn: Stok Modülü, İK Modülü) bağımsız Lego parçaları gibi geliştirilip ana sisteme takılabilir. Ayrıca sistemdeki her kritik veri değişimini otomatik olarak kaydeden **Audit Logging** yapısı kurumsal denetim için biçilmiş kaftandır.
+
+</details>
+
+<details>
+  <summary>Finans Uygulamaları</summary>
+  
+* **Mantığı:** Dijital cüzdanlar, bankacılık entegrasyonları, fatura/ödeme sistemleri gibi veri doğruluğunun, geriye dönük izlenebilirliğin ve güvenliğin kritik olduğu uygulamalardır.
+* **ABP Avantajı:** Gelişmiş ve katı bir **Authentication & Authorization** (Kimlik/Yetki) altyapısı sunar; hangi kullanıcının hangi kasaya veya hesaba erişebileceği (Role-Based) hatasız yönetilir. Para transferi veya mutabakat gibi sunucu kapansa bile yarıda kalmaması gereken işlemler ABP'nin entegre **Background Jobs** (Kalıcı Arka Plan İşleri) mimarisiyle güvenle yürütülür.
+
+</details>
+
+<details>
+  <summary>SaaS Ürünleri (Software as a Service)</summary>
+  
+* **Mantığı:** Geliştirilen bir yazılımın bulut üzerinden abonelik modeliyle yüzlerce farklı firmaya (müşteriye) kiralanması modelidir (Örn: Bulut tabanlı muhasebe veya İK yönetim yazılımları).
+* **ABP Avantajı:** SaaS projelerinin bel kemiği olan **Multi-Tenancy** (Çok Kiracılılık) desteği ABP'de yerleşik olarak gelir. Aynı uygulama ve veritabanını kullanan yüzlerce firmanın verileri, ABP'nin otomatik veri filtreleme mekanizması sayesinde birbirine asla karışmaz. Geliştirici her sorguya manuel şirket filtresi yazmak zorunda kalmaz.
+
+</details>
+
+<details>
+  <summary>Büyük Ölçekli Kurumsal Projeler (Enterprise Applications)</summary>
+  
+* **Mantığı:** Binlerce kullanıcısı olan, çok uzun yıllar yaşaması planlanan ve sürekli yeni özelliklerle büyüyen karmaşık yazılım ekosistemleridir.
+* **ABP Avantajı:** Projenin spagetti koda dönüşmesini engellemek için yazılımcıyı **Domain Driven Design (DDD)** standartlarına göre kod yazmaya zorlar. Bağımlılıkların temiz yönetilmesi için güçlü bir **Dependency Injection** otomasyonu sunar. Ortak mimari dili sayesinde ekibe yeni katılan geliştiriciler projeye saniyeler içinde adapte olur ve kod kalitesi yıllar geçse de korunur.
+
+</details>
