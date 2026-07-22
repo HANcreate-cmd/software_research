@@ -1993,3 +1993,41 @@ Kod hem satır satır İngilizce gibi okunabilir olur hem de son derece düzenli
 * **Yazılım Örneği:** Projenizin içine koyduğunuz tek bir `.gitlab-ci.yml` dosyası ile kodunuzun önce test edilmesini, başarılı olursa ara sunucuya aktarılmasını, yönetici onay verirse de canlı sunucuya gönderilmesini zincirleme bir reaksiyon halinde yönetirsiniz.
 
 </details>
+
+### Pipeline Adımları (Boru Hattı İstasyonları)
+
+<details>
+  <summary>Build (Derleme)</summary>
+  
+* **Mantığı:** Geliştiricinin yazdığı, insanlar tarafından okunabilen ham kaynak kodunun (C#, Java vb.) derleyici tarafından kontrol edilerek bilgisayarın anlayıp çalıştırabileceği makine diline (veya ara birime, örn: .dll) dönüştürülmesi işlemidir.
+* **Gerçek Hayat Örneği:** Bir mobilyanın kağıt üzerindeki tasarım çizimlerinin, atölyede kesilip biçilerek gerçek, fiziksel tahta parçalarına dönüştürülmesidir.
+* **Yazılım Örneği:** BookStore projenizi Git'e gönderdiğinizde, Pipeline ilk iş olarak `dotnet build` komutunu çalıştırır. Eğer kodda noktalı virgül eksikse veya bir değişken yanlış yazılmışsa, proje "Build" edilemez ve süreç ilk istasyonda durdurulur.
+
+</details>
+
+<details>
+  <summary>Test (Doğrulama)</summary>
+  
+* **Mantığı:** Build aşamasından başarıyla geçen (çalışabilir durumdaki) kodun, geliştirici tarafından önceden yazılmış olan otomatik test senaryolarından geçirilerek iş mantığının (business logic) doğru çalışıp çalışmadığının kontrol edilmesidir.
+* **Gerçek Hayat Örneği:** Atölyede kesilip hazırlanan tahta parçalarının birleştirilip üzerine ağırlık konularak sağlamlığının (kırılıp kırılmayacağının) test edilmesidir.
+* **Yazılım Örneği:** Pipeline `dotnet test` komutunu çalıştırır. "Bir kitaba %20 indirim uygulandığında fiyatı doğru hesaplanıyor mu?" diye kontrol eden kodunuz çalışır. Eğer sistem 100 liralık kitabı 80 lira yerine 90 lira bulursa, test başarısız olur ve süreç durdurulur.
+
+</details>
+
+<details>
+  <summary>Publish (Paketleme)</summary>
+  
+* **Mantığı:** Hatasız derlenen ve tüm testleri başarıyla geçen projenin, çalışması için gereken tüm kütüphaneler, resimler, konfigürasyon dosyaları (appsettings.json vb.) ile birlikte sıkıştırılıp "yayına hazır tek bir paket" haline getirilmesidir.
+* **Gerçek Hayat Örneği:** Sağlamlık testinden başarıyla geçen mobilyanın, kargo kutusuna konulup yanına kurulum şeması ve vidalarının da eklenerek müşteriye gönderilmeye hazır, kapalı bir koli haline getirilmesidir.
+* **Yazılım Örneği:** Pipeline `dotnet publish` komutunu çalıştırır. Sizin dağınık duran tüm C# sınıflarınızı ve klasörlerinizi alır, sadece sunucunun çalıştıracağı dosyaları içeren temiz ve sıkıştırılmış bir "Release" klasörü oluşturur.
+
+</details>
+
+<details>
+  <summary>Deploy (Dağıtım / Yayına Alma)</summary>
+  
+* **Mantığı:** Publish aşamasında oluşturulan hazır paketin, son kullanıcının erişebileceği canlı hedef sunuculara (Web Server, Docker, Bulut vb.) aktarılması ve uygulamanın dış dünyaya açılarak çalışır hale getirilmesidir.
+* **Gerçek Hayat Örneği:** Kargo kolisi halindeki mobilyanın, müşterinin evine (sunucu) götürülüp odasına kurulması ve artık kullanılmaya başlanmasıdır.
+* **Yazılım Örneği:** Pipeline, oluşturduğu o temiz klasörü alır, güvenli bir şekilde Microsoft Azure veya AWS üzerindeki gerçek sunucunuza kopyalar. Sunucuyu yeniden başlatır ve artık "bookstore.com" adresine giren herkes projenizin o yeni halini görmeye başlar.
+
+</details>
