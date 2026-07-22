@@ -2031,3 +2031,307 @@ Kod hem satır satır İngilizce gibi okunabilir olur hem de son derece düzenli
 * **Yazılım Örneği:** Pipeline, oluşturduğu o temiz klasörü alır, güvenli bir şekilde Microsoft Azure veya AWS üzerindeki gerçek sunucunuza kopyalar. Sunucuyu yeniden başlatır ve artık "bookstore.com" adresine giren herkes projenizin o yeni halini görmeye başlar.
 
 </details>
+
+## 23. Cloud, Ağ ve İşletim Sistemi Temelleri
+
+<details>
+  <summary>IaaS (Infrastructure as a Service / Hizmet Olarak Altyapı)</summary>
+  
+* **Mantığı:** Bulut sağlayıcısının (Microsoft, Amazon, Google) size sadece donanım (Sanal Makine, İşlemci, RAM, Depolama) kiraladığı modeldir. İşletim sisteminin kurulması, ağ ayarları ve güvenliği tamamen sizin sorumluluğunuzdadır. En yüksek kontrolü sağlar ama yönetimi zordur.
+* **Gerçek Hayat Örneği:** Ev yapmak için sadece boş bir arsa (altyapı) satın almaktır. Suyun nereden geçeceği, evin planı ve inşaatı tamamen sizin işinizdir.
+* **Yazılım Örneği:** Azure üzerinden boş bir Windows Server veya Ubuntu sanal makinesi (Virtual Machine) kiralarsınız. İçine .NET SDK'sını, IIS'i ve veritabanını ellerinizle tek tek kurar, sonra BookStore projenizi içine atıp çalıştırırsınız.
+
+</details>
+
+<details>
+  <summary>PaaS (Platform as a Service / Hizmet Olarak Platform)</summary>
+  
+* **Mantığı:** Donanımın yanı sıra işletim sistemi, ağ ve çalışma ortamı (Runtime) gibi altyapısal detayların da bulut firması tarafından yönetildiği modeldir. Yazılımcı sadece uygulamanın koduna ve veritabanındaki veriye odaklanır.
+* **Gerçek Hayat Örneği:** Bir alışveriş merkezinde içi tamamen dekore edilmiş, elektriği, suyu ve güvenliği hazır bir dükkan (platform) kiralamaktır. Siz sadece ürünlerinizi (kodunuzu) raflara dizer ve satmaya başlarsınız.
+* **Yazılım Örneği:** Azure App Service veya Heroku kullanmaktır. Arka planda hangi Windows sürümünün çalıştığını bilmezsiniz. Sistem sizden sadece projenizin "Publish" (yayınlanmış) klasörünü ister. Kodu yüklersiniz ve site anında ayağa kalkar.
+
+</details>
+
+<details>
+  <summary>SaaS (Software as a Service / Hizmet Olarak Yazılım)</summary>
+  
+* **Mantığı:** Altyapı, işletim sistemi, veritabanı, kodlama ve arayüz dahil her şeyin bulut firması tarafından halledildiği ve uygulamanın internet üzerinden son kullanıcıya hazır bir ürün olarak kiralandığı modeldir.
+* **Gerçek Hayat Örneği:** Herhangi bir araç satın almadan, bakımını veya sigortasını düşünmeden, sadece ihtiyacınız olduğunda taksiye (hazır hizmet) binip gitmek istediğiniz yere ulaşmaktır.
+* **Yazılım Örneği:** Gmail, Netflix, Spotify veya Office 365. Arkada hangi veritabanının çalıştığıyla veya sistemin hangi sunucuda barındığıyla ilgilenmezsiniz. Sadece tarayıcıdan girer, e-postalarınızı okur veya filminizi izlersiniz.
+
+</details>
+
+### Azure Temelleri
+
+<details>
+  <summary>App Service</summary>
+  
+* **Mantığı:** Azure'un web uygulamalarını (Web API, MVC, Blazor vb.) internette yayınlamak için sunduğu tam yönetilen bir PaaS (Hizmet Olarak Platform) ürünüdür. İşletim sistemi güncellemeleri, sunucu bakımı veya IIS/Kestrel ayarlarıyla uğraşmazsınız; sadece kodunuzu yükler ve çalıştırırsınız.
+* **Gerçek Hayat Örneği:** Masaları, mutfağı, elektriği ve suyu hazır olan anahtar teslim bir kiralık dükkandır. Siz sadece menünüzü (kodunuzu) getirir ve anında müşterilere hizmet vermeye başlarsınız.
+* **Yazılım Örneği:** Geliştirdiğiniz projeyi "Publish" edip çıkan dosyaları Azure App Service'e attığınız anda uygulamanız `uygulama-adiniz.azurewebsites.net` linkiyle tüm dünyadan erişilebilir hale gelir. Uygulamanıza çok trafik gelirse, tek bir tuşla sunucu gücünü anında artırabilirsiniz.
+
+</details>
+
+<details>
+  <summary>Storage Account (Depolama Hesabı)</summary>
+  
+* **Mantığı:** Bulutta neredeyse sınırsız ve çok ucuz bir dosya/veri barındırma alanıdır. Özellikle resimler, videolar, PDF'ler, log dosyaları veya veritabanı yedekleri gibi büyük boyutlu ve yapılandırılmamış (Blob) verileri saklamak için kullanılır.
+* **Gerçek Hayat Örneği:** Ne kadar eşya koyarsanız esneyip büyüyen, sadece içine koyduğunuz eşyanın kapladığı alan kadar kira ödediğiniz devasa ve akıllı bir kiralık depodur.
+* **Yazılım Örneği:** Sitenize kullanıcılar tarafından yüklenen binlerce profil fotoğrafını veya kitap kapağı resmini, gigabaytı çok pahalı olan SQL veritabanına kaydetmek büyük bir hatadır. Bunun yerine resimleri Azure Storage'a (Blob) kaydedip, veritabanında sadece o resmin internet linkini tutarsınız.
+
+</details>
+
+<details>
+  <summary>SQL Database</summary>
+  
+* **Mantığı:** Microsoft SQL Server'ın bulut üzerinde çalışan, kurulum gerektirmeyen (PaaS) versiyonudur. Yedekleme (backup), güvenlik yamaları, donanım arızaları ve bakım gibi tüm dertleri Microsoft üstlenir. Siz sadece tablolarınızı oluşturup sorgu atmaya odaklanırsınız.
+* **Gerçek Hayat Örneği:** Sizin için tüm ticari kayıtlarınızı tutan, bu kayıtların asla silinmeyeceğini, yanmayacağını veya kaybolmayacağını garanti eden, 7/24 uyanık ve uzman bir muhasebe departmanıyla çalışmaktır.
+* **Yazılım Örneği:** Projenizdeki `appsettings.json` dosyasına Azure'un size sağladığı Connection String'i (Bağlantı Cümlesini) yapıştırırsınız. Artık `dotnet ef database update` dediğinizde, tablolarınız sizin yerel bilgisayarınızda değil, Microsoft'un güvenli bulut sunucularında oluşur ve verileriniz oraya kaydedilir.
+
+</details>
+
+### AWS Temelleri (Amazon Web Services)
+
+<details>
+  <summary>EC2 (Elastic Compute Cloud)</summary>
+  
+* **Mantığı:** AWS'nin IaaS (Hizmet Olarak Altyapı) modelindeki sanal sunucu kiralama hizmetidir. Bulut üzerinde kapasitesini (CPU, RAM) sizin belirlediğiniz boş bir bilgisayar kiralarsınız. İşletim sistemi ve gerekli yazılımların kurulumu tamamen sizin sorumluluğunuzdadır.
+* **Gerçek Hayat Örneği:** AVM'de sadece dört duvarı olan boş bir dükkan kiralayıp, boyasından rafına kadar her şeyini kendi ellerinizle inşa etmektir.
+* **Yazılım Örneği:** AWS paneline girip "Bana 4 GB RAM'li bir Ubuntu Linux makine ver" dersiniz. Sonra bu makineye uzaktan bağlanıp siyah komut ekranından (Terminal) içine Nginx, .NET SDK kurup BookStore projenizi manuel olarak ayaklandırırsınız.
+
+</details>
+
+<details>
+  <summary>S3 (Simple Storage Service)</summary>
+  
+* **Mantığı:** AWS'nin "Object Storage" (Nesne Depolama) hizmetidir. "Bucket" (Kova) adı verilen yapılar içinde resim, PDF, video, yedekleme dosyası gibi büyük boyutlu ve düzensiz verileri sınırsız kapasitede ve çok ucuza saklamanızı sağlar.
+* **Gerçek Hayat Örneği:** Dükkanın arkasındaki, içine ne kadar koli atarsanız atın dolmayan ve sadece kapladığınız alan kadar para ödediğiniz sihirli bir depo gibidir.
+* **Yazılım Örneği:** Kullanıcılar profil fotoğraflarını değiştirdiğinde, bu fotoğrafları veritabanına kaydetmek yerine AWS S3'te açtığınız "bookstore-images" isimli kovaya (bucket) yüklersiniz ve veritabanında sadece bu resmin internet URL'sini saklarsınız.
+
+</details>
+
+<details>
+  <summary>RDS (Relational Database Service)</summary>
+  
+* **Mantığı:** AWS'nin yönetilen ilişkisel veritabanı (PaaS) hizmetidir. Kendi sunucunuza veritabanı kurmakla uğraşmazsınız; Amazon sizin için PostgreSQL, MySQL veya SQL Server'ı kurar, bakımını yapar ve düzenli olarak yedekler.
+* **Gerçek Hayat Örneği:** Kendi bünyenizde bir muhasebeci çalıştırıp masraflarıyla uğraşmak yerine, tüm yasal kayıtlarınızı garanti altına alan uzman ve dışarıdan bir muhasebe şirketiyle anlaşmaktır.
+* **Yazılım Örneği:** BookStore projenizdeki `appsettings.json` dosyasına AWS'nin size verdiği RDS bağlantı cümlesini (Connection String) eklersiniz. Uygulamanız tüm müşteri ve kitap verilerini güvenli bir şekilde doğrudan AWS'nin veritabanı sunucularına yazar.
+
+</details>
+
+### Ağ ve İletişim Protokolleri
+
+<details>
+  <summary>IP (Internet Protocol / İnternet Protokolü)</summary>
+  
+* **Mantığı:** Ağ üzerindeki cihazların birbirini bulmasını sağlayan adresleme ve yönlendirme kuralıdır. Verinin (paketin) başlangıç noktasından hedef noktaya hangi yollardan (router'lardan) geçerek gideceğine karar verir.
+* **Gerçek Hayat Örneği:** Kargo paketinin üzerine yazdığınız açık ev adresi ve posta kodudur. Kargo şirketi bu adrese bakarak paketi şehirden şehre, şubeden şubeye aktarır. Ancak adres etiketinin kendisi, paketin içinin sağlam olup olmadığını umursamaz.
+* **Yazılım Örneği:** Bir API'ye veya veritabanına istek attığınızda (`192.168.1.15` veya `google.com` gibi), kodunuzun dünya üzerindeki milyarlarca cihaz arasından hedef sunucuyu nokta atışı bulmasını sağlayan sistemdir.
+
+</details>
+
+<details>
+  <summary>TCP (Transmission Control Protocol / İletim Kontrol Protokolü)</summary>
+  
+* **Mantığı:** Verinin kayıpsız, sırasıyla ve eksiksiz bir şekilde hedefe ulaşmasını garanti eden protokoldür. Gönderilen veri paketlere bölünür, numaralandırılır ve her bir paketin ulaştığına dair karşı taraftan "onay (ACK)" beklenir.
+* **Gerçek Hayat Örneği:** Önemli bir sözleşmeyi iadeli taahhütlü kargoyla göndermektir. Kargo alıcıya ulaştığında size bir teslimat onayı gelir. Eğer kargo yolda kaybolursa, sistem onay alamadığı için aynı evrakı otomatik olarak tekrar kargolar.
+* **Yazılım Örneği:** BookStore projenizde kullanıcıya bir kitap resmi veya uzun bir JSON listesi gönderdiğinizde, bu veri ağda parçalar halinde ilerler. Eksik veya bozuk bir parça (byte) varsa TCP onu anında tekrar ister, böylece kullanıcının ekranında resim yarım yüklenmez veya uygulama veri kaybından çökmez.
+
+</details>
+
+<details>
+  <summary>TCP/IP (Birlikte Çalışma Mimarisi)</summary>
+  
+* **Mantığı:** Modern internetin belkemiğini oluşturan, IP'nin yön bulma yeteneğiyle TCP'nin güvenlik/hata düzeltme yeteneğinin ayrılmaz bir şekilde birleştiği protokol ailesidir.
+* **Gerçek Hayat Örneği:** IP kargo şirketinin devasa dağıtım ağı ve harita navigasyonudur; TCP ise o araçlardaki kargoların eksiksiz teslim edildiğini denetleyen kalite kontrol müdürüdür. İkisi olmadan kusursuz bir teslimat yapılamaz.
+* **Yazılım Örneği:** Tarayıcıya bir adres yazıp "Enter"a bastığınızdan itibaren tüm süreç bu ikiliye emanettir. Siz arka planda .NET ile API'nizi yazarken veri iletiminin teknik karmaşasını düşünmezsiniz; çünkü TCP/IP, uygulamanız ile istemci (client) arasındaki o güvenli otobanı çoktan kurmuştur.
+
+</details>
+
+
+
+<details>
+  <summary>DNS (Domain Name System / Alan Adı Sistemi)</summary>
+  
+* **Mantığı:** İnsanların okuyup aklında tutabildiği harflerden oluşan alan adlarını (domain), bilgisayarların anlayıp iletişim kurabildiği rakamlardan oluşan IP adreslerine çeviren (çözümleyen) sistemdir.
+* **Gerçek Hayat Örneği:** Cep telefonunuzdaki rehber uygulamasıdır. Yakın bir arkadaşınızı aramak istediğinizde onun 11 haneli telefon numarasını tuşlamak (IP Adresi) yerine; rehberden sadece ismine tıklarsınız (Alan Adı). Arka planda telefon o kişiye ait numarayı bulur ve aramayı gerçekleştirir.
+* **Yazılım Örneği:** BookStore projenizi canlıya aldığınızda Azure veya AWS size `104.45.21.32` gibi karmaşık bir IP adresi verir. Müşterilerinize "Sitemize bu numaradan girin" diyemezsiniz. Gidip bir "bookstore.com" alan adı satın alırsınız ve DNS ayarlarından bu alan adını o IP numarasına eşitlersiniz. Artık kullanıcılar isminizi yazdığında, DNS onları otomatik olarak sunucunuza yönlendirir.
+
+</details>
+
+
+<details>
+  <summary>DHCP (Dynamic Host Configuration Protocol)</summary>
+  
+* **Mantığı:** Ağa katılan cihazlara IP adresi, alt ağ maskesi (subnet mask) ve ağ geçidi (gateway) gibi iletişim ayarlarını otomatik, dinamik ve belirli bir süre için (kiralama/lease) atayan protokoldür. Cihaz ağdan koptuğunda, o IP adresi boşa çıkar ve havuzda başka bir cihaza verilmek üzere bekletilir.
+* **Gerçek Hayat Örneği:** Bir otele giriş yaptığınızda resepsiyonistin (DHCP Sunucusu) size o an boşta olan bir odanın anahtarını (IP Adresi) konaklama süreniz boyunca tahsis etmesidir. Siz otelden ayrıldığınızda (ağdan koptuğunuzda), o anahtar havuza geri döner ve yeni gelen başka bir müşteriye verilir. Hangi odanın boş olduğunu siz değil, sistem takip eder.
+* **Yazılım Örneği:** Telefonunuzla bir kafenin Wi-Fi ağına bağlandığınızda, ayarlara girip karmaşık ağ numaraları tuşlamazsınız. Kafenin modemi, cihazınıza saniyeler içinde "192.168.1.45" gibi boşta olan bir IP tahsis eder. Benzer şekilde Azure'da yük arttığında otomatik olarak ayağa kalkan (Scale Out) yeni sunucularınız da, sanal ağın DHCP'si sayesinde anında bir IP alır ve saniyeler içinde sisteme dahil olup kullanıcılara hizmet vermeye başlar.
+
+</details>
+
+
+<details>
+  <summary>HTTP / HTTPS (Hypertext Transfer Protocol / Secure)</summary>
+  
+* **Mantığı:** İstemci (web tarayıcısı veya mobil uygulama) ile sunucu arasındaki veri alışverişini sağlayan standart mesajlaşma kuralıdır. HTTP verileri şifrelemeden çıplak halde gönderirken; HTTPS araya girenlerin veriyi okumasını engellemek için tüm iletişimi SSL/TLS algoritmalarıyla şifreler.
+* **Gerçek Hayat Örneği:** HTTP, yazdığınız bir mesajı şeffaf bir dosya kağıdına yazıp kargoya vermektir; kurye veya yolda paketi gören herkes mesajı rahatça okuyabilir. HTTPS ise o mesajı sadece alıcının açabildiği çelik bir kasaya koyup kilitlemektir; yoldaki herkes kasayı görür ama içindeki şifreyi sadece doğru anahtara sahip olan hedef kişi çözebilir.
+* **Yazılım Örneği:** BookStore projenizde bir kullanıcı giriş yapmak için şifresini ve kredi kartı bilgilerini yazıp "Gönder" butonuna bastığında, sistem HTTP kullanıyorsa hackerlar ağa sızıp şifreyi "123456" olarak açıkça görebilir. Ancak uygulamanıza bir SSL sertifikası kurup HTTPS'e geçirdiğinizde, o şifre sunucuya gidene kadar "x8#kL9z$!p..." gibi anlamsız bir metne dönüşür ve çalınsa bile hiçbir işe yaramaz.
+
+</details>
+
+### Ağ ve Sunucu Mimarisi
+
+<details>
+  <summary>Nginx (Web Sunucusu ve Reverse Proxy)</summary>
+  
+* **Mantığı:** İnternetten gelen HTTP/HTTPS isteklerini ilk karşılayan, statik dosyaları (resim, CSS, HTML) inanılmaz bir hızla sunan ve asıl iş yükünü arka plandaki uygulama sunucularına güvenli bir şekilde dağıtan yüksek performanslı bir yazılımdır.
+* **Gerçek Hayat Örneği:** Dev bir holdingin girişindeki süper yetenekli resepsiyonisttir. Gelen ziyaretçilerin kimliğini kontrol eder (SSL/Güvenlik), "Lavabo ne tarafta?" gibi basit sorulara patronu meşgul etmeden anında kendisi cevap verir (Statik Dosya Sunumu) ve kritik bir toplantı için gelenleri arka taraftaki ilgili yöneticilere dengeli bir şekilde yönlendirir (Reverse Proxy / Yük Dengeleme).
+* **Yazılım Örneği:** Projenizi canlıya aldığınızda, kullanıcıları doğrudan arka planda çalışan uygulamanıza bağlamazsınız. Nginx'i en öne koyarsınız. Kullanıcı siteye girdiğinde Nginx HTTPS şifrelemesini çözer, sitenin logolarını ve ağır dosyalarını anında teslim eder; sadece "Sepeti Onayla" gibi veritabanı işlemi gerektiren asıl istekleri arka plandaki API'nize ileterek sisteminizin yorulmadan çalışmasını sağlar.
+
+</details>
+
+
+<details>
+  <summary>Apache (Web Sunucusu)</summary>
+  
+* **Mantığı:** Gelen her web isteği (HTTP/HTTPS) için ayrı bir işlem (process) veya iş parçacığı (thread) oluşturan, modüler yapısı sayesinde inanılmaz derecede esnek ayarlanabilen köklü bir web sunucusudur. Geliştiricilere dizin bazlı yapılandırma (`.htaccess`) imkanı sunması en büyük gücüdür.
+* **Gerçek Hayat Örneği:** Çok lüks, geleneksel ve kaliteli bir restorandır. Kapıdan giren her bir müşteri (web isteği) için özel bir garson (thread) görevlendirilir. Müşteri menüye bakarken, yemeğini yerken veya sohbet ederken o garson sadece o masayla ilgilenir. Müşteriye çok esnek ve özel bir hizmet sunulur ancak kapıya aniden on binlerce kişi yığılırsa, garson sayısı yetersiz kalacağı için restoran tıkanabilir.
+* **Yazılım Örneği:** Geleneksel bir WordPress veya PHP projesi barındırırken genellikle Apache (LAMP yığını) tercih edilir. Sunucunun ana ayarlarına hiç dokunmadan, sadece projenizin içindeki bir klasöre `.htaccess` isimli küçük bir metin dosyası koyarak; o klasöre gelen linkleri başka bir yere yönlendirebilir veya dizini saniyeler içinde şifreli erişime kapatabilirsiniz.
+
+</details>
+
+
+<details>
+  <summary>Reverse Proxy (Ters Vekil Sunucu)</summary>
+  
+* **Mantığı:** İnternetten gelen istemci (client) isteklerini doğrudan arka plandaki uygulama sunucularına iletmek yerine, önce kendisi karşılayan, güvenliğini ve optimizasyonunu sağlayan, ardından istekleri uygun sunucuya yönlendiren ara katman sunucusudur.
+* **Gerçek Hayat Örneği:** Çok katlı ve çok gizli bir genel müdürlük binasının girişindeki danışma ve güvenlik bariyeridir. Dışarıdan gelen hiçbir yabancı direkt olarak içeri girip müdürün odasına (ana veritabanına/sunucuya) gidemez. Önce danışmada karşılanır, kimliği kontrol edilir, paketi veya mesajı danışman tarafından alınarak içeri iletilir. Müdürün odasının nerede olduğu dışarıdakiler tarafından bilinmez.
+* **Yazılım Örneği:** BookStore projenizi yayına aldığınızda, hackerlar doğrudan sizin .NET uygulamamızın çalıştığı porta saldıramasın diye önüne bir Reverse Proxy (örneğin Nginx veya YARP) koyarsınız. Dışarıdan gelen tüm istekler önce bu proxy'ye çarpar; zararlı kodlar süzülür, SSL şifresi çözülür ve temiz istek arka plandaki uygulamanıza güvenle teslim edilir.
+
+</details>
+
+
+<details>
+  <summary>Load Balancer (Yük Dengeleyici)</summary>
+  
+* **Mantığı:** Gelen ağ trafiğini (istekleri) arka planda çalışan birden fazla sunucuya belirli algoritmalarla (Round Robin, Least Connections vb.) dağıtarak hiçbir sunucunun aşırı yük altında ezilmesini önleyen ve sistemin sürekliliğini sağlayan bileşendir.
+* **Gerçek Hayat Örneği:** Çok popüler bir mağazanın girişindeki yönlendirici görevlidir. İçerideki kasalardan biri çok uzun kuyruklar oluşturduğunda, yeni gelen müşterileri hemen boşta olan diğer kasalara yönlendirerek tüm kasaların dengeli ve hızlı çalışmasını sağlar.
+* **Yazılım Örneği:** BookStore projenize Black Friday indirimlerinde aniden milyonlarca kişi akın ettiğinde, tek bir Azure App Service sunucusu buna yetemez. Arkaya 3 tane aynı uygulamadan kurarsınız ve önüne bir Load Balancer koyarsınız. Gelen 1. kullanıcıyı Sunucu A'ya, 2. kullanıcıyı Sunucu B'ye, 3. kullanıcıyı Sunucu C'ye göndererek sistemi ayakta tutarsınız. Sunuculardan biri çökerse, trafik otomatik olarak sağlam kalan diğer sunuculara yönlendirilir.
+
+</details>
+
+### İşletim Sistemi 
+
+<details>
+  <summary>Process (Süreç / İşlem)</summary>
+  
+* **Mantığı:** İşletim sistemi tarafından kendisine bağımsız bir bellek (RAM) alanı ve sistem kaynakları tahsis edilerek yürütülen, çalışır durumdaki her bir programdır. Her process'in eşsiz bir İşlem Kimliği (PID) vardır ve güvenlik gerekçesiyle diğer process'lerin bellek alanına doğrudan erişemez.
+* **Gerçek Hayat Örneği:** Bir yemek tarifi kitabı raftayken sadece statik bir kağıt yığınıdır (Program/Exe). Ancak bir aşçı o tarifi alıp tezgaha koyduğunda, malzemeleri hazırlayıp yemeği pişirmeye başladığı an bir Process haline gelmiş olur. Mutfaktaki diğer aşçıların tezgâhı (belleği) ondan tamamen ayrıdır.
+* **Yazılım Örneği:** Bilgisayarınızda Visual Studio, Chrome ve Spotify'ı aynı anda açtığınızda, Görev Yöneticisi'nde (Task Manager) her biri ayrı birer Process olarak görünür. Chrome aniden çöküp kapansa bile, bağımsız bellek alanları sayesinde arka planda çalan Spotify müziğiniz kesilmeden çalışmaya devam eder.
+
+</details>
+
+
+<details>
+  <summary>Thread (İş Parçacığı)</summary>
+  
+* **Mantığı:** Bir process'in içinde çalışan ve işlemci (CPU) zamanını doğrudan kullanan en küçük yürütme birimidir. Aynı process'e ait thread'ler ortak bir bellek (RAM) alanını paylaşırlar, bu sayede veriler arasında hızlıca iletişim kurabilirler ancak dikkatli yönetilmezlerse aynı veriye aynı anda müdahale edip çakışmalara (Concurrency Issues) yol açabilirler.
+* **Gerçek Hayat Örneği:** Bir pastanedir (Process). O pastanenin içinde aynı anda ekmek yoğuran, kasaya bakan ve sipariş paketleyen üç farklı işçi (Thread) vardır. Bu işçiler aynı dükkanı ve aynı mutfak malzemelerini (ortak bellek) ortaklaşa kullanırlar.
+* **Yazılım Örneği:** BookStore uygulamanızda bir kullanıcı rapor indirirken, arka planda başka bir kullanıcı siteye üye olabilir. Uygulamanızın ana süreci içinde çalışan farklı thread'ler sayesinde bu iki işlem birbirini engellemeden eş zamanlı (paralel) olarak yürütülür.
+
+</details>
+
+
+<details>
+  <summary>Memory (Bellek / RAM)</summary>  
+  
+* **Mantığı:** İşlemcinin (CPU) anlık olarak çalıştığı koda, verilere ve değişkenlere milisaniyeler seviyesinde erişmesini sağlayan geçici ama ultra hızlı bir depolama alanıdır. Elektrik kesildiğinde veya sistem yeniden başlatıldığında RAM üzerindeki tüm veriler silinir.
+* **Gerçek Hayat Örneği:** Bir marangozun üzerindeki çalışma tezgahıdır. Marangoz o an çivilediği tahtayı veya kullandığı çekiç ile tornavidayı tezgahın üzerine koyar (RAM), hızlıca işini bitirir. Akşam dükkanı kapatırken kalan tüm malzemeleri kilitli depoya (Harddisk/SSD) kaldırır.
+* **Yazılım Örneği:** BookStore projenizde bir kullanıcı API'ye istek attığında; veritabanından çekilen nesneler, oluşturulan değişkenler ve uygulamanın o an yürüttüğü C# kodları doğrudan RAM'e yüklenir. İşlem bittiğinde Garbage Collector (Çöp Toplayıcı) bu bellek alanını temizleyerek sistemi rahatlatır.
+
+</details>
+
+### Paralel Programlama (Concurrency)
+
+<details>
+  <summary>Concurrency (Eşzamanlılık)</summary>
+  
+* **Mantığı:** Bir uygulamanın aynı zaman diliminde birden fazla görevi yürütme, yönetme ve ilerletme yeteneğidir. İşlerin illa aynı anda (aynı salisede) çalışması şart değildir; önemli olan sistemin bu görevleri birbirini dondurmadan, kaynakları paylaşarak etkin bir şekilde idare edebilmesidir.
+* **Gerçek Hayat Örneği:** Tek bir aşçının mutfakta aynı anda çorba karıştırması, fırındaki kekin pişmesini beklemesi ve bu sırada tezgâhtaki salatayı doğramasıdır. Aşçı her salisede aynı anda 3 işi birden yapmaz; ancak aralarında çok hızlı geçiş yaparak üç yemeğin de aynı zaman diliminde hazırlanmasını sağlar.
+* **Yazılım Örneği:** BookStore projenizde aynı anda 100 farklı kullanıcı siteye girip arama yaptığında, sunucunuz her bir kullanıcının isteğini bağımsız görevler olarak yönetir. `async/await` mimarisi sayesinde veritabanından cevap beklerken sunucu kilitlenmez, diğer kullanıcıların taleplerine yanıt vermeye devam ederek yüksek bir Concurrency (Eşzamanlılık) performansı sunar.
+
+</details>
+
+<details>
+  <summary>Deadlock (Kilitlenme)</summary>
+  
+* **Mantığı:** İki veya daha fazla işlemin (thread/process), diğerinin elinde tuttuğu kaynağı (bellek, veritabanı tablosu vb.) kilitli olarak beklemesi sonucu ortaya çıkan sonsuz kilitlenme durumudur. Taraflardan hiçbiri elindeki kaynağı serbest bırakmadığı için sistem tamamen kilitlenir ve yanıt veremez hale gelir.
+* **Gerçek Hayat Örneği:** Dar ve tek şeritli bir köprüde karşı karşıya gelen iki arabadır. İki sürücü de geri adım atmayı reddeder ve diğerinin geri gitmesini bekler. Sonuç olarak yol tamamen tıkanır ve arkadaki araçlar dahil kimse ilerleyemez.
+* **Yazılım Örneği:** BookStore projenizde Thread A "Kitaplar" tablosunu kilitleyip "Yazarlar" tablosuna erişmek isterken; tam o salisede Thread B "Yazarlar" tablosunu kilitleyip "Kitaplar" tablosuna erişmeye çalışırsa Deadlock oluşur. Veritabanı bunu fark ettiğinde işlemlerden birini (Deadlock Victim) zorla iptal ederek kilitlenmeyi çözer.
+
+</details>
+
+## Linux Temelleri
+
+<details>
+  <summary>ls (List - Listeleme)</summary>
+  
+* **Mantığı:** İçine girdiğiniz klasörde hangi dosyaların ve alt klasörlerin bulunduğunu gösterir. En yaygın kullanımı `ls -la` şeklindedir (gizli dosyaları ve detaylı dosya izinlerini/boyutlarını gösterir).
+* **Gerçek Hayat Örneği:** Karanlık bir odaya girip feneri açarak içeride hangi eşyaların (dosyaların) olduğuna bakmaktır.
+* **Yazılım Örneği:** BookStore projenizi sunucuya attıktan sonra, o klasörün içinde gerçekten `appsettings.json` dosyasının var olup olmadığını doğrulamak için `ls -la` komutunu kullanırsınız.
+
+</details>
+
+<details>
+  <summary>cd (Change Directory - Dizin Değiştirme)</summary>
+  
+* **Mantığı:** Klasörler arasında geçiş yapmanızı, terminalin aktif çalışma konumunu değiştirmenizi sağlar. `cd ..` bir üst klasöre, `cd ~` ise doğrudan kullanıcı ana dizinine atar.
+* **Gerçek Hayat Örneği:** Evin içinde oturma odasından çıkıp (`cd ..`) mutfağa adım atmaktır (`cd mutfak`).
+* **Yazılım Örneği:** Sunucudaki projenizin konfigürasyonlarını düzenlemek için `cd /var/www/bookstore` komutuyla o derin klasörün içine fiziksel olarak giriş yaparsınız.
+
+</details>
+
+<details>
+  <summary>pwd (Print Working Directory - Çalışma Dizinini Yazdır)</summary>
+  
+* **Mantığı:** O an terminalde fiziksel olarak hangi klasörün içinde bulunduğunuzu, en tepeden (kök dizinden) başlayarak tam yol (Absolute Path) olarak ekrana yazdırır.
+* **Gerçek Hayat Örneği:** Devasa bir alışveriş merkezinde kaybolduğunuzda, duvardaki haritada yer alan "Şu an tam olarak buradasınız" işaretine bakmaktır.
+* **Yazılım Örneği:** Terminalde derin klasörler arasında kayboldunuz ve tehlikeli bir silme (`rm`) komutu çalıştıracaksınız. Yanlış yeri silmemek için önce `pwd` yazarsınız ve ekranda `/var/www/bookstore` yolunu görerek doğru yerde olduğunuzu teyit edersiniz.
+
+</details>
+
+<details>
+  <summary>cat (Concatenate - Dosya İçeriğini Okuma)</summary>
+  
+* **Mantığı:** Bir metin dosyasının içeriğini, düzenleme modunu (editör) açmadan doğrudan terminal ekranına yukarıdan aşağıya boydan boya basar. Sadece hızlı okuma/görüntüleme içindir.
+* **Gerçek Hayat Örneği:** Masanın üzerinde duran bir not kağıdını elinize alıp içindeki yazıyı sesli okuyup tekrar masaya bırakmaktır. Üzerine kalemle yeni bir şey yazmazsınız.
+* **Yazılım Örneği:** Projede veritabanı bağlantısı koptuğunda, şifrenin doğruluğunu hızlıca görmek için `cat appsettings.json` komutunu çalıştırırsınız. Dosyanın içeriği saniyeler içinde siyah ekrana dökülür.
+
+</details>
+
+<details>
+  <summary>grep (Global Regular Expression Print - Metin Arama)</summary>
+  
+* **Mantığı:** Devasa metin dosyalarının veya uzun terminal çıktılarının içinde belirli bir kelimeyi (deseni) arayıp, sadece o kelimenin geçtiği satırları filtreleyerek karşınıza getirir.
+* **Gerçek Hayat Örneği:** 500 sayfalık kalın bir kitapta "CTRL + F" tuşlarına basarak aradığınız kelimenin geçtiği tüm cümleleri saniyeler içinde filtrelemektir.
+* **Yazılım Örneği:** .NET uygulamanız çöktü ve hata logları on binlerce satırdan oluşuyor. Gözle aramak yerine `grep "Exception" error.log` yazarak hatanın kaynağını saniyeler içinde bulursunuz.
+
+</details>
+
+<details>
+  <summary>chmod (Change Mode - İzinleri Değiştirme)</summary>
+  
+* **Mantığı:** Bir dosya veya klasör üzerindeki Okuma (Read - r), Yazma (Write - w) ve Çalıştırma (Execute - x) izinlerini sistemdeki kullanıcılara veya gruplara göre ayarlamanızı sağlar.
+* **Gerçek Hayat Örneği:** Bir ofis odasına kimin sadece girip bakabileceğine (okuma), kimin eşyaların yerini değiştirebileceğine (yazma) ve kimin odadaki makineleri çalıştırabileceğine (çalıştırma) karar veren yetkilendirme sistemidir.
+* **Yazılım Örneği:** CI/CD süreçleriniz için `deploy.sh` isimli bir kurulum betiği yazdınız. Terminalde bu kodları çalıştırmak istediğinizde sistem size "Erişim Engellendi" der. `chmod +x deploy.sh` yazarak o metin dosyasına bir `.exe` gibi çalışma yetkisi (x) verirsiniz.
+
+</details>
+
+<details>
+  <summary>systemctl (System Control - Servis Yönetimi)</summary>
+  
+* **Mantığı:** Linux işletim sisteminde arka planda 7/24 çalışan uygulamaları (servisleri) başlatmak, durdurmak, yeniden başlatmak veya sunucu açıldığında otomatik başlamalarını sağlamak (enable) için kullanılan ana şalterdir.
+* **Gerçek Hayat Örneği:** Büyük bir fabrikanın ana elektrik ve jeneratör kontrol panelidir. Merkezi ısıtma sistemini açmak, durdurmak veya fabrikanın şalteri her açıldığında havalandırmanın da otomatik başlamasını ayarlamak için bu paneli kullanırsınız.
+* **Yazılım Örneği:** BookStore uygulamanızı arka planda çalışan bir servis haline getirdiniz. Uygulamanızın .NET kodlarında bir güncelleme yaptığınızda, yeni değişikliklerin sunucuda aktif olması için `systemctl restart bookstore` komutunu çalıştırırsınız.
+
+</details>
