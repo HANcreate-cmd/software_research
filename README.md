@@ -17,7 +17,7 @@
 
 </details>
 
-## Versiyon Kontrol Sistemleri (Temel Git Komutları)
+### Versiyon Kontrol Sistemleri (Temel Git Komutları)
 
 <details>
   <summary>git init (Initialize - Başlatma)</summary>
@@ -82,7 +82,7 @@
 
 </details>
 
-## Versiyon Kontrol Sistemleri
+### Versiyon Kontrol Sistemleri
 
 <details>
   <summary>GitHub (Bulut Tabanlı Kod Deposu)</summary>
