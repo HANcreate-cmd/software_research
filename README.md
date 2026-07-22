@@ -1935,3 +1935,61 @@ Kod hem satır satır İngilizce gibi okunabilir olur hem de son derece düzenli
 * **ABP Avantajı:** Projenin spagetti koda dönüşmesini engellemek için yazılımcıyı **Domain Driven Design (DDD)** standartlarına göre kod yazmaya zorlar. Bağımlılıkların temiz yönetilmesi için güçlü bir **Dependency Injection** otomasyonu sunar. Ortak mimari dili sayesinde ekibe yeni katılan geliştiriciler projeye saniyeler içinde adapte olur ve kod kalitesi yıllar geçse de korunur.
 
 </details>
+
+## 22. CI/CD Pipeline
+
+<details>
+  <summary>CI (Continuous Integration / Sürekli Entegrasyon) Nedir?</summary>
+  
+* **Mantığı:** Birden fazla geliştiricinin üzerinde çalıştığı kodların, sık sık (günde birkaç kez) merkezi bir depoya gönderilmesi ve sistem tarafından otomatik olarak derlenip (build) test edilmesidir. Amaç, kod çakışmalarını önlemek ve hataları projeye dahil olmadan anında yakalamaktır.
+* **Gerçek Hayat Örneği:** Bir araba fabrikasında üretilen her yeni parçanın, ana araca monte edilmeden önce otomatik bir makine tarafından sağlamlık testinden geçirilmesidir. Çatlak veya hatalı bir parça asla montaj bandına giremez.
+* **Yazılım Örneği:** Geliştirdiğiniz projeye yeni bir özellik ekleyip Git'e gönderdiğinizde, sistemin arka planda otomatik olarak ayağa kalkıp kodu derlemesi ve yazdığınız tüm birim testlerini (Unit Tests) çalıştırarak doğrulamasıdır.
+
+</details>
+
+<details>
+  <summary>CD (Continuous Delivery / Sürekli Teslimat) Nedir?</summary>
+  
+* **Mantığı:** Sürekli Entegrasyon (CI) aşamasından başarıyla geçen kodun, canlı ortama (Production) çıkacak şekilde tam hazır ve paketlenmiş halde bekletilmesi; ancak yayına almak için **manuel bir onay** (insan müdahalesi veya buton tıklaması) gerektirmesidir.
+* **Gerçek Hayat Örneği:** Restoranda aşçının yemeği kusursuzca hazırlayıp servis bankosuna koymasıdır (teslimat hazırdır). Ancak garsonun yemeği müşteriye götürmek için şefin "servis edebilirsin" demesini beklemesidir.
+* **Yazılım Örneği:** Testlerden geçen uygulamanızın canlı ortama çıkacak son paket haline getirilip sunucuda bekletilmesidir. Sistem yayına çıkmaya %100 hazırdır ancak proje yöneticisi "Cuma akşamı risk almayalım, Pazartesi sabahı onaylarız" diyerek süreci manuel olarak bekletir.
+
+</details>
+
+<details>
+  <summary>CD (Continuous Deployment / Sürekli Dağıtım) Nedir?</summary>
+  
+* **Mantığı:** Kodun yazılımcının bilgisayarından çıkıp son kullanıcının önüne ulaştığı anın %100 otomatikleştirilmiş halidir. Tüm testlerden başarıyla geçen kod, hiçbir insan onayı veya müdahalesi beklenmeden anında canlı sunuculara yüklenir.
+* **Gerçek Hayat Örneği:** Üretim bandından kalite kontrolleri yapılarak hatasız çıkan yepyeni bir gazetenin, matbaadan çıktığı saniye otonom bir bant sistemiyle doğrudan dağıtım kamyonlarına yüklenip okuyuculara doğru yola çıkmasıdır. Arada kimseye sorulmaz.
+* **Yazılım Örneği:** Büyük teknoloji firmalarında, bir mühendisin yazdığı kod depoya gönderildikten dakikalar sonra tüm otomatik testleri hatasız geçer ve otonom olarak canlı sunuculara yüklenerek dünyadaki tüm kullanıcıların erişimine açılır.
+
+</details>
+
+### CI/CD Araçları ###
+
+<details>
+  <summary>GitHub Actions</summary>
+  
+* **Mantığı:** GitHub'ın içine entegre edilmiş, repo'da gerçekleşen her bir olayı (kodu gönderme, yeni bir sürüm oluşturma vb.) tetikleyici olarak kullanıp otomasyon süreçleri çalıştıran modern bir araçtır.
+* **Gerçek Hayat Örneği:** Dükkanınızın kapısına taktığınız ve biri içeri girdiğinde otomatik olarak ışıkları yakan, klimayı açan ve kahve makinesini çalıştıran akıllı bir hareket sensörü sistemidir.
+* **Yazılım Örneği:** Projenize bir kod push'ladığınızda, GitHub Actions arka planda sizin için sanal bir bilgisayar ayağa kaldırır, kodu derler, hataları kontrol eder ve her şey yolundaysa isminizin yanına yeşil bir tik atar.
+
+</details>
+
+<details>
+  <summary>Azure DevOps</summary>
+  
+* **Mantığı:** Microsoft'un sunduğu, özellikle büyük şirketlerin tercih ettiği, sadece kod otomasyonunu (Pipelines) değil; proje yönetimi, hata takibi ve kod deposunu tek bir çatı altında toplayan devasa bir kurumsal ekosistemdir.
+* **Gerçek Hayat Örneği:** Sadece bir üretim bandı değil; muhasebeden insan kaynaklarına, parça siparişinden kalite kontrole kadar dev bir fabrikanın tüm süreçlerini tek bir ekrandan yöneten entegre bir yönetim (ERP) sistemidir.
+* **Yazılım Örneği:** Yöneticiniz size sistem üzerinden bir iş (Task) atar. Siz kodu yazıp gönderdiğinizde Azure Pipelines devreye girer, projenizi derler ve güvenli bir şekilde Microsoft Azure bulut sunucularına otomatik olarak yükler.
+
+</details>
+
+<details>
+  <summary>GitLab CI</summary>
+  
+* **Mantığı:** GitLab platformunun içine gömülü gelen, gücü ve esnekliğiyle bilinen, otomasyon aşamalarını (stages) yönetmeyi son derece kolaylaştıran endüstri standardı bir sürekli entegrasyon aracıdır.
+* **Gerçek Hayat Örneği:** İçine koyduğunuz ürünleri istasyon istasyon gezdiren; önce yıkayan, sonra kurutan, ardından paketleyen ve herhangi bir istasyonda sorun çıkarsa bandı anında durduran akıllı bir fabrika konveyörüdür.
+* **Yazılım Örneği:** Projenizin içine koyduğunuz tek bir `.gitlab-ci.yml` dosyası ile kodunuzun önce test edilmesini, başarılı olursa ara sunucuya aktarılmasını, yönetici onay verirse de canlı sunucuya gönderilmesini zincirleme bir reaksiyon halinde yönetirsiniz.
+
+</details>
