@@ -2131,3 +2131,99 @@ Kod hem satır satır İngilizce gibi okunabilir olur hem de son derece düzenli
 * **Yazılım Örneği:** BookStore uygulamanızı arka planda çalışan bir servis haline getirdiniz. Uygulamanızın .NET kodlarında bir güncelleme yaptığınızda, yeni değişikliklerin sunucuda aktif olması için `systemctl restart bookstore` komutunu çalıştırırsınız.
 
 </details>
+
+## 24. Monolith vs Microservices
+
+<details>
+  <summary>Monolith (Monolitik Mimari)</summary>
+  
+* **Mantığı:** Bir yazılım projesindeki tüm bileşenlerin (iş mantığı, veritabanı erişimi, kullanıcı arayüzü vb.) tek bir kod tabanında (codebase) birleştirildiği ve sistemin tek bir bütün halinde sunucuya yüklendiği geleneksel mimari yaklaşımıdır. Başlangıçta geliştirmesi ve yönetmesi kolaydır ancak proje büyüdükçe hantallaşır.
+* **Gerçek Hayat Örneği:** Her işi yapabilen dev bir İsviçre çakısıdır. Bıçak, makas, tirbuşon ve testere aynı gövdeye sabitlenmiştir. Taşıması pratiktir ancak makasın yayı bozulduğunda tamir için tüm çakıyı servise göndermeniz gerekir; makas tamirdeyken sağlam olan bıçağı da kullanamazsınız.
+* **Yazılım Örneği:** C# ve .NET ile geliştirdiğiniz BookStore projesinde kitap kataloğunun, kullanıcı yönetiminin ve döviz kurlarıyla hesaplama yapan çoklu para birimi modülünün tamamının aynı Entity Framework Core altyapısı ve tek bir veritabanı üzerinde çalışmasıdır. Döviz kurlarını hesaplayan modülde oluşacak ciddi bir hata veya bellek sızıntısı, projenin tamamını çökerterek kullanıcıların siteye girmesini tamamen engeller.
+
+</details>
+
+<details>
+  <summary>Microservices (Mikroservis Mimarisi)</summary>
+  
+* **Mantığı:** Büyük ve karmaşık bir uygulamanın, her biri kendi iş mantığına, bağımsız altyapısına ve genellikle kendi veritabanına sahip küçük, otonom servislere bölündüğü modern mimaridir. Bu servisler kendi aralarında ağ üzerinden (çoğunlukla REST API veya mesaj kuyrukları ile) haberleşir.
+* **Gerçek Hayat Örneği:** Büyük bir otelin profesyonel ekibidir. Resepsiyonist, aşçı, temizlik görevlisi ve güvenlik birbirinden tamamen bağımsız çalışır. Aşçı hastalanıp o gün işe gelmediğinde mutfaktan yemek çıkmaz, ancak otelin güvenliği sağlanmaya ve resepsiyon yeni müşteri kabul etmeye sorunsuzca devam eder. Otel sistemi tamamen durmaz.
+* **Yazılım Örneği:** BookStore projesini bu mimariyle tasarladığınızda; "Kitap Kataloğu" servisi ve "Çoklu Para Birimi/Ödeme" servisi birbirinden tamamen bağımsız iki ayrı proje olarak ayağa kalkar. Ödeme servisinde bir çökme yaşanırsa sistem tamamen kapanmaz; müşteriler kitapları inceleyip sepetlerine eklemeye devam edebilir, sadece ödeme aşamasında geçici bir uyarı görürler. Ayrıca sisteme aşırı yük bindiğinde tüm projeyi değil, sadece zorlanan servisi ölçeklendirebilirsiniz.
+
+</details>
+
+### Mikroservis Avantajları
+
+<details>
+  <summary>Bağımsız Deployment (Bağımsız Dağıtım)</summary>
+  
+* **Mantığı:** Sistemdeki devasa kod tabanını baştan aşağı derleyip (build) tüm sistemi anlık da olsa durdurmak yerine, sadece kod değişikliği yapılan veya güncellenen ilgili servisin tek başına canlıya (production) alınabilmesidir.
+* **Gerçek Hayat Örneği:** Bir sinema salonunda seyirciler filmi kesintisiz izlemeye devam ederken, görevlilerin arka odadaki bozulan mısır patlatma makinesini sessizce yenisiyle değiştirmesidir.
+* **Yazılım Örneği:** BookStore projenizde üzerinde çalıştığınız çoklu para birimi hesaplamasında bir kuralı değiştirdiğinizde, tüm siteyi bakıma almak yerine sadece "Ödeme/Döviz Servisi"ni derleyip sunucuya atarsınız. Bu kısa işlem sırasında sitedeki diğer kullanıcılar kitapları incelemeye ve siteye üye olmaya kesintisiz devam eder.
+
+</details>
+
+<details>
+  <summary>Ölçeklenebilirlik (Scalability)</summary>
+  
+* **Mantığı:** Sisteme anlık ve devasa bir trafik geldiğinde tüm uygulamayı kopyalayarak gereksiz kaynak (RAM/CPU) tüketmek yerine, sadece darboğaz (bottleneck) yaşayan servisin kapasitesinin veya kopyalarının sayısının artırılmasıdır.
+* **Gerçek Hayat Örneği:** Bir restoranda siparişler yetişmediğinde; restoranı baştan aşağı kopyalayıp yeni valeler ve güvenlik görevlileri işe almak yerine, doğrudan sorunun kaynağına (mutfağa) 3 yeni aşçı ekleyerek yoğunluğu çözmektir.
+* **Yazılım Örneği:** Okulların açıldığı dönem BookStore sitenize kitap aramak için akın eden binlerce kullanıcı "Katalog" servisini zorladığında; bulut altyapısı üzerinde sadece "Katalog" servisinin sayısını 1'den 5'e çıkarır ve önüne bir Load Balancer eklersiniz. "Kargo" veya "Ödeme" servislerini boş yere çoğaltmayarak hem çöküşü önler hem de sunucu masraflarınızı minimize edersiniz.
+
+</details>
+
+### Mikroservis Dezavantajları
+
+<details>
+  <summary>Operasyonel Karmaşıklık (Operational Complexity)</summary>
+  
+* **Mantığı:** Tek bir uygulamanın dağıtılması ve izlenmesi yerine; onlarca, hatta yüzlerce farklı servisin altyapısını, CI/CD (Sürekli Entegrasyon/Dağıtım) süreçlerini ve loglarını yönetmek zorunda kalmanın getirdiği devasa yönetim zorluğudur.
+* **Gerçek Hayat Örneği:** Tek bir arabayı (Monolith) tamir edip yola çıkarmak kolaydır. Ancak 20 farklı drone'dan (Microservices) oluşan bir filoyu aynı anda havada tutmak, bataryalarını takip etmek ve rüzgarda birbirlerine çarpmalarını engellemek ciddi bir mühendislik operasyonu gerektirir.
+* **Yazılım Örneği:** BookStore uygulamanız tek parçayken bir hata olduğunda `error.log` dosyasına bakmanız yeterlidir. Ancak mikroservis mimarisinde bir kitap satın alım işlemi 4 farklı servisten (Kullanıcı, Katalog, Sepet, Ödeme) geçiyorsa; bir hata oluştuğunda sorunun hangi serviste veya hangi aşamada patladığını bulmak için gelişmiş merkezi loglama araçlarına ihtiyaç duyarsınız.
+
+</details>
+
+<details>
+  <summary>Dağıtık Sistem Problemleri (Distributed System Problems)</summary>
+  
+* **Mantığı:** Servisler birbirleriyle fiziksel ağ (Network) üzerinden haberleştiği için ağın kopması, gecikmeler (Latency) yaşanması veya işlemlerin yarım kalması gibi risklerin ortaya çıkmasıdır. Farklı veritabanları arasında veri tutarlılığını (Data Consistency) sağlamak çok zordur.
+* **Gerçek Hayat Örneği:** Yüz yüze yapılan bir toplantıda (Monolith) iletişim anlık ve kesintisizdir, herkes ne konuşulduğunu o an duyar. Dağıtık sistem ise bu toplantının mektuplar aracılığıyla yapılmasıdır; mektup yolda kaybolabilir, geç gidebilir veya bir kişi mektubu okuyup cevap vermeyi unutabilir.
+* **Yazılım Örneği:** BookStore projenizde kullanıcının cüzdanından para düşme işlemi "Ödeme Servisi"ndeki veritabanında başarıyla gerçekleşebilir, ancak tam o an ağ (Network) bağlantısı koparsa "Sipariş Servisi" haberdar olamaz ve sipariş oluşturulmaz. Entity Framework Core'un sunduğu tek satırlık `SaveChanges()` kolaylığı ortadan kalkar; bu tür senaryolar için karmaşık telafi algoritmaları yazmanız gerekir.
+
+</details>
+
+### Mimari Karşılaştırma
+
+<details>
+  <summary>Monolith vs Microservices Tablosu</summary>
+  
+| Özellik | Monolith (Monolitik) | Microservices (Mikroservis) |
+| :--- | :--- | :--- |
+| **Yapı** | Tek parça, birleşik kod tabanı (Tüm kodlar aynı yerde). | Küçük, bağımsız parçalara bölünmüş izole servisler. |
+| **Geliştirme Hızı** | Başlangıçta (küçük ekipler için) çok hızlı ve yönetmesi basittir. | Başlangıçta yavaştır, ciddi bir altyapı ve mimari tasarım gerektirir. |
+| **Veritabanı** | Genellikle tüm sistem için tek ve ortak bir veritabanı kullanılır. | İdeal senaryoda her servisin kendine ait bağımsız veritabanı vardır. |
+| **Ölçeklenebilirlik** | Yük altında tüm uygulama bir bütün olarak çoğaltılır (Maliyetli). | Sadece ihtiyaç duyulan (zorlanan) servisler ölçeklendirilir (Verimli). |
+| **Hata İzolasyonu** | Bir modüldeki kritik hata veya bellek sızıntısı tüm sistemi çökertir. | Bir servisteki çöküş (örneğin kargo) diğerlerini etkilemez, sistem ayakta kalır. |
+| **Bağımlılık (Teknoloji)**| Tüm proje aynı dil ve framework (.NET vb.) ile yazılmak zorundadır. | Her servis ihtiyaca göre farklı bir dille (C#, Java, Python vb.) yazılabilir. |
+
+</details>
+
+### Mikroservis Bileşenleri
+
+<details>
+  <summary>API Gateway (API Geçidi)</summary>
+  
+* **Mantığı:** Mikroservis mimarilerinde dış dünyadan (istemcilerden) gelen tüm HTTP isteklerini karşılayan, tek bir giriş noktası (Single Point of Entry) olarak görev yapan sunucudur. İstemcileri arka plandaki karmaşık servis ağından soyutlar. Yönlendirme (Routing), yetkilendirme (Authentication), hız sınırlaması (Rate Limiting) ve loglama gibi merkezi işlemleri tek başına üstlenir.
+* **Gerçek Hayat Örneği:** Büyük bir holding binasının girişindeki güvenlikli danışma masasıdır. Dışarıdan gelen bir ziyaretçi binanın içinde kaybolup İnsan Kaynakları veya Muhasebe departmanını kendi başına aramaz. Sadece danışmaya gider, kimliğini gösterir (Yetkilendirme) ve danışma onu binanın içindeki doğru odaya yönlendirir (Routing).
+* **Yazılım Örneği:** BookStore projenizi mikroservislere böldükten sonra, cep telefonu uygulamasının "Katalog", "Sepet" ve "Çoklu Para Birimi" servislerinin IP adreslerini tek tek ezberlemesine gerek kalmaz. Mobil uygulama her işlem için sadece `api.bookstore.com` adresine istek atar. API Gateway bu isteği kapıda karşılar, gelen kullanıcının güvenlik token'ını (JWT) doğrular ve isteği arka planda C# ile yazılmış ilgili doğru servise iletir.
+
+</details>
+
+<details>
+  <summary>Service Discovery (Servis Keşfi)</summary>
+  
+* **Mantığı:** Mikroservis mimarisinde, sürekli çoğalan, kapanan veya çöken servislerin dinamik olarak değişen IP adreslerini ve portlarını merkezi bir "kayıt defterinde" tutan sistemdir. Servisler ayağa kalktığında kendini bu merkeze kaydeder (Service Registry). Diğer servisler veya API Gateway, birbiriyle iletişim kurmak istediğinde sabit bir IP ezberlemek yerine bu merkeze sorarak güncel adresi öğrenir.
+* **Gerçek Hayat Örneği:** Cep telefonunuzdaki dinamik rehberdir. Arkadaşınız numarasını değiştirdiğinde, siz onun yeni numarasını ezberlemek zorunda kalmazsınız. Arkadaşınız rehberdeki (buluttaki) kaydını günceller; siz sadece ismine tıklayarak onu aramaya devam edersiniz. Arka planda numaranın (IP'nin) değişmiş olması sizin iletişiminizi koparmaz.
+* **Yazılım Örneği:** BookStore projenizde kampanya döneminde "Çoklu Para Birimi" servisiniz artan yükten dolayı ölçeklenip 10 farklı sunucuda (10 farklı IP ile) çalışmaya başladı. API Gateway, gelen döviz çeviri isteklerini nereye göndereceğini bilemez. Ancak Consul veya Eureka gibi bir Service Discovery aracı kullanıyorsanız; yeni açılan her servis kendini bu merkeze kaydettirir. API Gateway güncel IP listesini buradan çekerek trafiği doğru ve hatasız bir şekilde yönlendirir.
+
+</details>
