@@ -1,7 +1,7 @@
  # trex_research
 
  ***
-#### *Programlama ile ilgili kısa bi araştırma raporu*
+#### *Programlama ile ilgili kısa bir araştırma raporu*
 ***
 
  
